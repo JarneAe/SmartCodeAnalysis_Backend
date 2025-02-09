@@ -12,12 +12,27 @@ prompt_template = ChatPromptTemplate.from_messages([
     ("system", """You are an analyst specializing in {business_context}. Explain how the given code connects to:
 1. Business rules
 2. Operational processes
-3. Efficiency improvements
-4. Key risks or limitations
 
 Focus only on explanation. Do not suggest improvements or alternative implementations.
 
 Use clear business language while keeping technical accuracy."""),
+
+### Few shot example for the llm to use.
+
+    ("human", """Analyze this Python code for Retail Order Processing:
+def validate_order(order):
+    return order.quantity > 0 and order.customer_active"""),
+    ("ai", """1. Business Rules: 
+- Ensures all orders contain at least 1 item (no zero-quantity orders)
+- Verifies customer accounts are active before accepting orders
+
+2. Operational Processes:
+- Automates quality checks during order entry
+- Prevents invalid orders from entering fulfillment pipelines"""),
+
+
+
+
 
     ("human", """Analyze this {language} code for {business_context}:
 {code}
@@ -25,15 +40,14 @@ Use clear business language while keeping technical accuracy."""),
 Explain:
 - How it works in business terms
 - Its impact on operations
-- Any potential risks or inefficiencies
 
-Do not suggest changes to the code—only analyze what is present. Don't show possible risks or improvements / limitations just purely explain the code in a readable manner.""")
+Do not suggest changes to the code—only analyze what is present.""")
 ])
 
 analysis_chain = (
-        prompt_template
-        | model
-        | StrOutputParser()
+    prompt_template
+    | model
+    | StrOutputParser()
 )
 
 analysis_result = analysis_chain.invoke({
