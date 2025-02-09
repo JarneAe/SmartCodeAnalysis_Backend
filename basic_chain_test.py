@@ -35,7 +35,7 @@ def validate_order(order):
 
 
     ("human", """Analyze this {language} code for {business_context}:
-{code}
+{code} in file: {file_name}
 
 Explain:
 - How it works in business terms
@@ -53,6 +53,7 @@ analysis_chain = (
 analysis_result = analysis_chain.invoke({
     "business_context": "Retail Order Processing",
     "language": "Python",
+    "file_name": "order_validation.py",
     "code": """def apply_discount(price, discount):
     return max(price - (price * discount), 0)"""
 })
