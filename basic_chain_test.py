@@ -1,47 +1,70 @@
+import os
+import pdfplumber
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.output_parser import StrOutputParser
 from langchain_ollama import ChatOllama
 
+#get text from pdf
+
+folder_path = "files"
+
+def extract_text_from_pdfs(folder_path):
+    """Extracts text from all PDF files in a folder."""
+    all_text = []
+    for file_name in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, file_name)
+        if file_name.lower().endswith(".pdf") and os.path.isfile(file_path):
+            with pdfplumber.open(file_path) as pdf:
+                text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
+                all_text.append(text)
+    return "\n".join(all_text)
+
+business_context = extract_text_from_pdfs(folder_path)
+
 model = ChatOllama(
     model="llama3.2",
     temperature=0.2,
-    system="You are skilled at explaining technical implementations in business terms without suggesting code improvements."
+    system="You are skilled at explaining technical implementations in simple business terms that anyone can understand."
 )
 
 prompt_template = ChatPromptTemplate.from_messages([
-    ("system", """You are an analyst specializing in {business_context}. Explain how the given code connects to:
-1. Business rules
-2. Operational processes
+    ("system", """You are an expert in translating technical concepts into easy-to-understand business explanations. Your job is to analyze the provided code and explain how it supports business goals and day-to-day operations.
 
-Focus only on explanation. Do not suggest improvements or alternative implementations.
+You will be given:
+1. **Business Context** → Background information extracted from documents.
+2. **Code Snippet** → A technical implementation to analyze.
 
-Use clear business language while keeping technical accuracy."""),
-
-### Few shot example for the llm to use.
-
-    ("human", """Analyze this Python code for Retail Order Processing:
-def validate_order(order):
-    return order.quantity > 0 and order.customer_active"""),
-    ("ai", """1. Business Rules: 
-- Ensures all orders contain at least 1 item (no zero-quantity orders)
-- Verifies customer accounts are active before accepting orders
-
-2. Operational Processes:
-- Automates quality checks during order entry
-- Prevents invalid orders from entering fulfillment pipelines"""),
+### Your Task:
+- **Business Purpose:** Explain why this code is important for business operations.
+- **Real-World Impact:** Describe how this code helps in everyday business activities.
+- **Clear & Simple Explanation:** Avoid technical jargon and keep it easy to understand.
+- Explain everything in such a manner that a non-technical person would understand the importance of the code. If you do use any technical terms explain them very briefly.
 
 
 
+**DO NOT**:
+- Use technical language.
+- Suggest improvements or alternative implementations.
+- Repeat the business context without linking it to the code.
 
+Focus on a clear and practical business explanation."""),
 
-    ("human", """Analyze this {language} code for {business_context}:
-{code} in file: {file_name}
+    ("human", """## Business Context:
+{business_context}
 
-Explain:
-- How it works in business terms
-- Its impact on operations
+## Code Analysis Task:
+Analyze the following {language} code in file **{file_name}**:
 
-Do not suggest changes to the code—only analyze what is present.""")
+```
+{code}
+```
+
+### Provide:
+1. **Why this matters for the business.**
+2. **How it helps in daily operations.**
+3. **A simple explanation that connects the code to real-world business activities.**
+
+Keep it clear and easy to understand for non-technical stakeholders.""")
 ])
 
 analysis_chain = (
@@ -51,11 +74,61 @@ analysis_chain = (
 )
 
 analysis_result = analysis_chain.invoke({
-    "business_context": "Retail Order Processing",
-    "language": "Python",
-    "file_name": "order_validation.py",
-    "code": """def apply_discount(price, discount):
-    return max(price - (price * discount), 0)"""
+    "business_context": business_context,
+    "language": "Java",
+    "file_name": "DockOperationsController.java",
+    "code": """
+ package be.kdg.sa.jarne_milan.Water.controllers;
+
+
+import be.kdg.sa.jarne_milan.Water.controllers.dto.DockArrivalDto;
+import be.kdg.sa.jarne_milan.Water.controllers.dto.DockOperationDto;
+import be.kdg.sa.jarne_milan.Water.controllers.dto.DockOperationStatusResponseDto;
+import be.kdg.sa.jarne_milan.Water.services.DockOperationCreationService;
+import be.kdg.sa.jarne_milan.Water.services.DockOperationService;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/dock-operations")
+@Log4j2
+public class DockOperationsController {
+
+    private final DockOperationService dockOperationService;
+    private final DockOperationCreationService dockOperationCreationService;
+
+    public DockOperationsController(DockOperationService dockOperationService, DockOperationCreationService dockOperationCreationService) {
+        this.dockOperationService = dockOperationService;
+        this.dockOperationCreationService = dockOperationCreationService;
+    }
+
+    @GetMapping("/get-by-po/{purchaseOrderId}")
+    @PreAuthorize("hasAuthority('captain')")
+    public ResponseEntity<Optional<DockOperationDto>> getDockOperationByPurchaseOrderId(@PathVariable Long purchaseOrderId) {
+        log.info("Getting dock operation by purchase order id");
+        return ResponseEntity.ok(Optional.ofNullable(dockOperationService.getDockOperationById(purchaseOrderId)));
+    }
+
+    @GetMapping("/get-by-po/{purchaseOrderId}/status")
+    @PreAuthorize("hasAuthority('captain')")
+    public ResponseEntity<DockOperationStatusResponseDto> getDockOperationByPurchaseOrderIdStatus(@PathVariable Long purchaseOrderId) {
+        log.info("Getting dock operation status by purchase order id {}", purchaseOrderId);
+        DockOperationStatusResponseDto statusResponse = dockOperationService.getDockOperationByIdStatus(purchaseOrderId);
+        return ResponseEntity.ok(statusResponse);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('captain')")
+    public ResponseEntity<DockOperationDto> planOperations(@RequestBody DockArrivalDto dockArrivalDto) {
+        log.info("Creating dock operation and planning operations");
+        return ResponseEntity.ok(dockOperationCreationService.createDockOperation(dockArrivalDto));
+    }
+}
+""",
 })
 
 print("Business-Technical Analysis:\n")
