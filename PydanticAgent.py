@@ -12,7 +12,7 @@ pdf_convertor = PDFConvertor(file_path="files/SA 24-25 - Mineral Flow-1.pdf")
 business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
-    model_name='qwen2.5:7b',
+    model_name='qwen2.5:14b',
     base_url='http://localhost:11434/v1',
     api_key='ollama',
 )
@@ -21,7 +21,7 @@ business_explanation_agent = Agent(
     ollama_model,
     deps_type=str,
     result_type=ResponseTemplate,
-    retries=5
+    retries=10
 )
 
 
@@ -47,7 +47,9 @@ def add_business_context() -> str:
         "3. **User impact:** Describe how this affects the daily work of employees or customers\n"
         "4. **Why is this important:** Explain the strategic value to the business\n"
         "5. **Day in the life scenario:** Provide a concrete example of how this is used in daily operations\n\n"
-
+    
+        "Put the main focus on the business context that was given and ensure that the explanation is clear and easy to understand for non-technical stakeholders."
+        
         "### Critical Constraints:\n"
         "Focus exclusively on:\n"
         "- Real-world business processes\n"
@@ -76,26 +78,37 @@ message_history = []
 
 code_snippet = """
     This is the code that should be explained:
+    
+    public Long getWarehouseIdByLicensePlate(String licensePlate) {
+        try {
+            Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
+            if (data == null) {
+                throw new NoSuchElementException("No data found for license plate: " + licensePlate);
+            }
 
-    @Transactional
-    public DockOperationDto createDockOperation(DockArrivalDto dockArrivalDto) {
-        PurchaseOrder order = purchaseOrderRepository.findByPoNumberIgnoreCase(dockArrivalDto.getPoNumber())
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found"));
-        Vessel vessel = vesselRepository.findByVesselNumber(dockArrivalDto.getVesselNumber())
-                .orElseThrow(() -> new IllegalArgumentException("Vessel not found"));
-        DockOperation dockOperation = new DockOperation();
-        dockOperation.setPurchaseOrder(order);
-        dockOperation.setArrivalTime(LocalDateTime.now());
-        dockOperation.setCurrent(true);
-        dockOperation.setVessel(vessel);
-        dockOperation.setShipOperations(new ArrayList<>());
-        inspectionOperationCreationService.planInspectionOperation(dockOperation);
-        loadingOperationCreationService.planLoadingOperation(dockOperation, dockArrivalDto.getClientId(), dockArrivalDto.getPoNumber());
-        dockOperationRepository.save(dockOperation);
-        vessel.getDockOperations().add(dockOperation);
-        vesselRepository.save(vessel);
-        return dockOperationMapper.convertToDto(dockOperation);
+            Long sellerId = data.getFirst();
+            String mineralName = data.getSecond();
+
+            log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
+
+            String url = String.format(warehouseApiUrl, sellerId, mineralName);
+
+            ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                Long warehouseId = response.getBody();
+                log.info("Warehouse id retrieved: {}", warehouseId);
+                return warehouseId;
+            } else {
+                log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
+                throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
+            }
+        } catch (NoSuchElementException e) {
+            log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
+            throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
+        }
     }
+
 }"""
 
 result = business_explanation_agent.run_sync(
