@@ -14,10 +14,8 @@ class Response(BaseModel):
     day_in_the_life_usecase: str
 
 
-folder_path = "files"
 
-
-def extract_text_from_pdfs(folder_path):
+def extract_text_from_pdfs(folder_path = "files"):
     """Extracts text from all PDF files in a folder."""
     all_text = []
     for file_name in os.listdir(folder_path):
@@ -29,7 +27,7 @@ def extract_text_from_pdfs(folder_path):
     return "\n".join(all_text)
 
 
-business_context = extract_text_from_pdfs(folder_path)
+business_context = extract_text_from_pdfs()
 
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
