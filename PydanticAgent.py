@@ -1,36 +1,15 @@
-import os
-import pdfplumber
-from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
-
-
-class Response(BaseModel):
-    practical_use_case: str
-    business_impact: str
-    user_impact: str
-    why_code_important: str
-    day_in_the_life_usecase: str
-
-
-
-def extract_text_from_pdfs(folder_path = "files"):
-    """Extracts text from all PDF files in a folder."""
-    all_text = []
-    for file_name in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file_name)
-        if file_name.lower().endswith(".pdf") and os.path.isfile(file_path):
-            with pdfplumber.open(file_path) as pdf:
-                text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
-                all_text.append(text)
-    return "\n".join(all_text)
-
-
-business_context = extract_text_from_pdfs()
+from PDFConvertor import PDFConvertor
+from ResponseTemplate import ResponseTemplate
 
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
+
+pdf_convertor = PDFConvertor(file_path="files/SA 24-25 - Mineral Flow-1.pdf")
+
+business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
@@ -41,7 +20,7 @@ ollama_model = OpenAIModel(
 business_explanation_agent = Agent(
     ollama_model,
     deps_type=str,
-    result_type=Response,
+    result_type=ResponseTemplate,
     retries=5
 )
 
