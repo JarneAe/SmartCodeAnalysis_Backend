@@ -1,5 +1,4 @@
 import asyncio
-from fastapi import FastAPI
 from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
@@ -10,13 +9,11 @@ from Models.ResponseTemplate import ResponseTemplate
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
-app = FastAPI()
-
 pdf_convertor = PDFConvertor(file_path="files/SA 24-25 - Mineral Flow-1.pdf")
 business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
-    model_name='qwen2.5:14b',
+    model_name='qwen2.5:7b',
     base_url='http://localhost:11434/v1',
     api_key='ollama',
 )
@@ -74,7 +71,6 @@ message_history = []
 class CodeRequest(BaseModel):
     code_snippet: str
 
-@app.post("/explain-business")
 async def explain_business(request: CodeRequest):
     # Define a synchronous wrapper that creates its own event loop.
     def run_agent():
