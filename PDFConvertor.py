@@ -8,8 +8,7 @@ class PDFConvertor:
         markdown = MarkItDown()
         try:
             result = markdown.convert(self.file_path)
-            return result.text_content  # Ensure this is the correct attribute
+            return result.text_content
         finally:
-            # If MarkItDown has a close or cleanup method, call it here
             if hasattr(markdown, 'close'):
                 markdown.close()
