@@ -8,3 +8,6 @@ pydantic~=2.10.6
 chromadb~=0.5.23
 markitdown~=0.0.1a4
 fastapi~=0.115.8
+uvicorn
+logfire[httpx]
+
