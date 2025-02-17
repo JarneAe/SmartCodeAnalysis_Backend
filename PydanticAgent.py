@@ -8,7 +8,7 @@ import logfire
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
 
-OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434/v1")
 
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
