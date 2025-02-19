@@ -12,7 +12,7 @@ pdf_convertor = PDFConvertor(file_path="files/SA 24-25 - Mineral Flow-1.pdf")
 business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
-    model_name='qwen2.5:14b',
+    model_name='qwen2.5:7b',
     base_url='http://localhost:11434/v1',
     api_key='ollama',
 )
