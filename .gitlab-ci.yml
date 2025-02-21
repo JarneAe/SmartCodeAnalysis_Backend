@@ -1,0 +1,25 @@
+stages:
+  - dockerize_and_publish
+
+variables:
+  SERVICE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  OLLAMA_IMAGE: $CI_REGISTRY_IMAGE/ollama-custom:$CI_COMMIT_REF_SLUG
+
+dockerize_and_publish:
+  image: docker:20.10
+  stage: dockerize_and_publish
+  services:
+    - name: docker:dind
+      alias: docker
+
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+
+  script:
+    - docker build -t $SERVICE_IMAGE .
+    - docker build -t $OLLAMA_IMAGE ollama/
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin
+    - docker push $SERVICE_IMAGE
+    - docker push $OLLAMA_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
