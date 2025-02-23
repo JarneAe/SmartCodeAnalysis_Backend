@@ -1,27 +1,29 @@
+import os
 import ollama
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import models
 from qdrant_client.models import Distance, VectorParams
-import re
 from PDFConvertor import PDFConvertor
 import nltk
-
 from nltk.tokenize import sent_tokenize
 
+# Download necessary NLTK data
 nltk.download('punkt')
-nltk.download('punkt_tab')
 
+# Constants
 COLLECTION_NAME = "TestCollection"
+SAVE_DIR = "markdown_files"
+
+# Initialize clients
 qclient = QdrantClient(url="http://localhost:6333")
 oclient = ollama.Client("localhost")
-
 
 
 def chunk_markdown_by_sentences(markdown_text, max_chars=300):
     """
     Split the text into smaller chunks by sentences with a max character limit.
     """
-    sentences = sent_tokenize(markdown_text,language='dutch')
+    sentences = sent_tokenize(markdown_text, language='dutch')
     chunks = []
     current_chunk = ""
 
@@ -37,10 +39,6 @@ def chunk_markdown_by_sentences(markdown_text, max_chars=300):
         chunks.append(current_chunk.strip())
 
     return chunks
-
-
-
-
 
 
 def get_embeddings(text):
@@ -75,6 +73,7 @@ def upsert_embeddings(texts, file_name):
 
     qclient.upsert(collection_name=COLLECTION_NAME, points=points)
 
+
 def search_similar_text(query_text, top_k=5):
     """
     Embed the input text and return the top_k most similar results from Qdrant.
@@ -101,51 +100,52 @@ def search_similar_text(query_text, top_k=5):
     return results
 
 
-pdf_file = "files/SA 24-25 - Mineral Flow-1.pdf"
+pdf_file = "files/improved_case.pdf"
 converter = PDFConvertor(pdf_file)
 markdown_text = converter.convert()
+
 chunks = chunk_markdown_by_sentences(markdown_text, max_chars=300)
-upsert_embeddings(chunks, file_name=pdf_file.split("/")[-1])
+upsert_embeddings(chunks, file_name=os.path.basename(pdf_file))
+
 print(f"Processed {len(chunks)} fine-grained chunks from {pdf_file} and upserted successfully.")
+print(f"Markdown saved in directory: {SAVE_DIR}")
 
-
+# Search query
 query = """
-    
-    public Long getWarehouseIdByLicensePlate(String licensePlate) {
-        try {
-            Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
-            if (data == null) {
-                throw new NoSuchElementException("No data found for license plate: " + licensePlate);
-            }
-
-            Long sellerId = data.getFirst();
-            String mineralName = data.getSecond();
-
-            log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
-
-            String url = String.format(warehouseApiUrl, sellerId, mineralName);
-
-            ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                Long warehouseId = response.getBody();
-                log.info("Warehouse id retrieved: {}", warehouseId);
-                return warehouseId;
-            } else {
-                log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
-                throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
-            }
-        } catch (NoSuchElementException e) {
-            log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
-            throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
+public Long getWarehouseIdByLicensePlate(String licensePlate) {
+    try {
+        Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
+        if (data == null) {
+            throw new NoSuchElementException("No data found for license plate: " + licensePlate);
         }
+
+        Long sellerId = data.getFirst();
+        String mineralName = data.getSecond();
+
+        log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
+
+        String url = String.format(warehouseApiUrl, sellerId, mineralName);
+
+        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            Long warehouseId = response.getBody();
+            log.info("Warehouse id retrieved: {}", warehouseId);
+            return warehouseId;
+        } else {
+            log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
+            throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
+        }
+    } catch (NoSuchElementException e) {
+        log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
+        throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
     }
-
-
+}
 """
 
 results = search_similar_text(query)
 
+# Print search results
 for i, result in enumerate(results, 1):
     print(f"Result {i}:")
     print(f"File: {result['file_name']}")
