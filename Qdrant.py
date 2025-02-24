@@ -2,7 +2,6 @@ import os
 import ollama
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import models
-from qdrant_client.models import Distance, VectorParams
 from PDFConvertor import PDFConvertor
 import nltk
 from nltk.tokenize import sent_tokenize
@@ -19,7 +18,7 @@ qclient = QdrantClient(url="http://localhost:6333")
 oclient = ollama.Client("localhost")
 
 
-def chunk_markdown_by_sentences(markdown_text, max_chars=300):
+def chunk_markdown_by_sentences(markdown_text, max_chars=500):
     """
     Split the text into smaller chunks by sentences with a max character limit.
     """
@@ -100,17 +99,16 @@ def search_similar_text(query_text, top_k=5):
     return results
 
 
-pdf_file = "files/improved_case.pdf"
-converter = PDFConvertor(pdf_file)
-markdown_text = converter.convert()
+markdown_file = "markdown_files/improved_case.md"
+with open(markdown_file, "r", encoding="utf-8") as file:
+    markdown_text = file.read()
 
 chunks = chunk_markdown_by_sentences(markdown_text, max_chars=300)
-upsert_embeddings(chunks, file_name=os.path.basename(pdf_file))
+upsert_embeddings(chunks, file_name=os.path.basename(markdown_file))
 
-print(f"Processed {len(chunks)} fine-grained chunks from {pdf_file} and upserted successfully.")
+print(f"Processed {len(chunks)} fine-grained chunks from {markdown_file} and upserted successfully.")
 print(f"Markdown saved in directory: {SAVE_DIR}")
 
-# Search query
 query = """
 public Long getWarehouseIdByLicensePlate(String licensePlate) {
     try {
@@ -145,7 +143,6 @@ public Long getWarehouseIdByLicensePlate(String licensePlate) {
 
 results = search_similar_text(query)
 
-# Print search results
 for i, result in enumerate(results, 1):
     print(f"Result {i}:")
     print(f"File: {result['file_name']}")

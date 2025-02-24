@@ -1,64 +1,57 @@
-Mineral Flow
 
-Krystal Distributie Groep
+De Krystal Distributie Groep (KdG) is een bedrijf dat zich specialiseert in de efficiënte opslag en distributie van essentiële grondstoffen. Denk hierbij aan materialen zoals gips, ijzererts, cement, petcokes en slak. Hun huidige logistieke systeem is echter verouderd en moeilijk aan te passen aan nieuwe ontwikkelingen. Daarom zijn ze op zoek naar een nieuw, flexibel systeem genaamd KdG MineralFlow.
 
-Probleembeschrijving
+Doel van KdG MineralFlow
 
-Krystal Distributie Groep (KdG): Efficiënte en naadloze logistiek van mineralen
+Het nieuwe systeem moet de volledige materiaalstroom optimaliseren, vanaf de planning van de aankomst van grondstoffen tot de uiteindelijke opslag in de magazijnen. Dit omvat:
 
-Krystal Distributie Groep (KdG) is gespecialiseerd in de efficiënte en naadloze distributie van essentiële grondstoffen, waaronder gips, ijzererts, cement, petcokes en slak. Ze willen hun logistieke systeem vernieuwen, omdat het verouderd is en er moeilijk iets aan te veranderen is. Ze hebben een nieuw systeem nodig dat eenvoudig kan worden aangepast en gegevens beschikbaar maakt voor gebruik door andere systemen. Dit stelt KdG in staat om te reageren op veranderende marktomstandigheden en technologische innovaties.
+    Geavanceerde routeplanning: Efficiënte routes voor vrachtwagens en schepen.
+    Real-time tracking: Nauwkeurige locatiebepaling van transportmiddelen.
+    Voorspellende analyses: Het identificeren en voorkomen van knelpunten in de toeleveringsketen.
 
-Het nieuwe logistieke systeem kreeg de naam KdG MineralFlow en heeft tot doel de materiaalstroom te optimaliseren, vanaf de aankomstplanning tot de uiteindelijke opslag. Dit omvat geavanceerde algoritmen voor routeplanning, real-time tracking van vrachtwagens en schepen, en voorspellende analyses om knelpunten in de toeleveringsketen te identificeren en te voorkomen.
+Flexibiliteit voor toekomstige grondstoffen
 
-Momenteel verwerkt KdG de volgende materialen, maar hun ultramoderne magazijnen kunnen zich gemakkelijk aanpassen aan allerlei soorten grondstoffen, dus het systeem moet in staat zijn dit soort evoluties aan te kunnen. Denk hierbij aan de mogelijke toevoeging van zeldzame aardmetalen, die cruciaal zijn voor de productie van elektronica en groene technologieën, of specifieke legeringen die nodig zijn voor de lucht- en ruimtevaartindustrie.
+Hoewel KdG momenteel specifieke materialen verwerkt, zijn hun magazijnen ontworpen om een breed scala aan grondstoffen te verwerken. Het nieuwe systeem moet daarom flexibel genoeg zijn om toekomstige toevoegingen te ondersteunen, zoals:
 
-Beschrijvingen van grondstoffen
+    Zeldzame aardmetalen voor elektronica en groene technologieën.
+    Specifieke legeringen voor de lucht- en ruimtevaartindustrie.
 
-1. Gips:
+Grondstoffen en bijbehorende informatie
 
-* Beschrijving: Gips is een zacht sulfaatmineraal bestaande uit calciumsulfaatdihydraat. Het wordt vaak gebruikt in de bouwsector voor de productie van gips, gipsplaat en cement. Gips wordt in de landbouw ook gebruikt als bodemverbeteraar en meststof. Bijvoorbeeld, landbouwbedrijven in de regio gebruiken gips om de structuur van kleigronden te verbeteren en de opname van voedingsstoffen te verhogen, wat leidt tot een hogere gewasopbrengst.
-* Opslagprijs per ton per dag: 1$ / t/d
-* Verkoopprijs per ton: 13$ / ton
+Hier is een overzicht van de grondstoffen die KdG momenteel verwerkt, samen met belangrijke financiële gegevens:
 
-2. Ijzererts:
+    Gips:
+        Opslagprijs: 1$ per ton per dag.
+        Verkoopprijs: 13$ per ton.
+    Ijzererts:
+        Opslagprijs: 5$ per ton per dag.
+        Verkoopprijs: 110$ per ton.
+    Cement:
+        Opslagprijs: 3$ per ton per dag.
+        Verkoopprijs: 95$ per ton.
+    Petcoke (petroleumcola):
+        Opslagprijs: 10$ per ton per dag.
+        Verkoopprijs: 210$ per ton.
+    Slak:
+        Opslagprijs: 7$ per ton per dag.
+        Verkoopprijs: 160$ per ton.
 
-* Beschrijving: Ijzererts is een natuurlijk voorkomend mineraal waaruit ijzer wordt gewonnen. Het is een cruciale grondstof bij de productie van staal, dat op grote schaal wordt gebruikt in de bouw-, productie- en transportindustrie. Veel voorkomende soorten ijzererts zijn hematiet en magnetiet. Staalproducenten in nabijgelegen industriële zones zijn afhankelijk van de constante aanvoer van hoogwaardig ijzererts via KdG om hun productieprocessen draaiende te houden.
-* Opslagprijs per ton per dag: 5$ / t/d
-* Verkoopprijs per ton: 110$ / ton
+Klanten: Verkopers (leveranciers)
 
-3. Cement:
+KdG werkt samen met bedrijven die grondstoffen leveren voor opslag. Deze leveranciers betalen KdG voor logistieke en opslagdiensten. Belangrijke aspecten van deze samenwerking zijn:
 
-* Beschrijving: Cement is een bindmiddel dat in de bouw wordt gebruikt en dat uithardt en aan andere materialen hecht om ze samen te binden. Het is een belangrijk ingrediënt in beton, mortel en stucwerk. Portlandcement, gemaakt van kalksteen en klei, is het meest voorkomende type. Lokale bouwbedrijven en infrastructuurprojecten vertrouwen op de tijdige levering van cement door KdG voor de constructie van gebouwen, bruggen en wegen.
-* Opslagprijs per ton per dag: 3$ / t/d
-* Verkoopprijs per ton: 95$ / ton
-
-4. Petcoke (petroleumcola):
-
-* Beschrijving: Petcoke is een koolstofrijk vast materiaal afkomstig van olieraffinage. Vanwege de hoge calorische waarde wordt het gebruikt als brandstof bij energieopwekking, cementovens en andere industriële processen. Petcoke wordt ook gebruikt bij de productie van elektroden voor de aluminium- en staalindustrie. Energiecentrales en aluminiumfabrieken in de omgeving gebruiken petcoke als een kosteneffectieve brandstof om aan hun energiebehoeften te voldoen.
-* Opslagprijs per ton per dag: 10$ / t/d
-* Verkoopprijs per ton: 210$ / ton
-
-5. Slak:
-
-* Beschrijving: Slak is een bijproduct van het smeltproces dat wordt gebruikt om metalen uit hun ertsen te produceren. Het wordt in de bouw gebruikt als aggregaat in beton, in de wegenbouw en als grondstof bij de cementproductie. Slak helpt de duurzaamheid en sterkte van beton te verbeteren. Wegenbouwprojecten en betoncentrales maken gebruik van slak als een duurzaam alternatief voor traditionele aggregaten, waardoor de milieu-impact van bouwactiviteiten wordt verminderd.
-* Opslagprijs per ton per dag: 7$ / t/d
-* Verkoopprijs per ton: 160$ / ton
-
-Onze klanten
-
-Verkopers (leveranciers)
-
-Beschrijving
-
-Bedrijven die grondstoffen (gips, ijzererts, cement, petcoke, slak) aan de Krystal Distributie Groep (KdG) leveren voor opslag. Ze betalen voor de diensten van KdG voor de logistiek en opslag van hun producten. Dit omvat het beheer van leveringen, voorraadbeheer en de beschikbaarheid van opslagruimte, evenals aanvullende diensten zoals kwaliteitscontrole en monstername.
-
-Belangrijkste kenmerken
-
-* Leveringsbeheer: KdG kan in de planning 40 vrachtwagens per uur afhandelen. Dit betekent, als er binnen een uur 40 vrachtwagens arriveren, en laten we zeggen dat elke vrachtwagen een 25 tonner is, dat er binnen dat uur 1 kiloton grondstof aan de magazijnen wordt toegevoegd. Dit vereist een geavanceerd planningssysteem met real-time updates en aanpassingsmogelijkheden om de doorvoer te optimaliseren en vertragingen te minimaliseren.
-* Betaling voor opslag: Leveranciers betalen KdG voor de veilige opslag van de grondstoffen een vergoeding op basis van het gewicht en de duur van de opslag. De tarieven variëren afhankelijk van het type grondstof, de opslagperiode en eventuele aanvullende diensten, met kortingen voor langdurige opslag en grote volumes.
-* Voorraadbeheer: KdG beheert de inventaris van de opgeslagen grondstoffen met behulp van een geavanceerd voorraadbeheersysteem dat gebruikmaakt van RFID-technologie en barcodescanning. Dit zorgt voor nauwkeurige tracking van de hoeveelheden, locaties en kwaliteitsgegevens van alle materialen in de magazijnen.
-* Beschikbaarheid van opslagruimte: Verkopers kunnen alleen materialen leveren als er opslagruimte beschikbaar is (minder dan 80% vol). Elk magazijn kan maximaal 500 kt bevatten. Omdat er overloopcapaciteit is kan een magazijn een theoretische capaciteit van 110% (of meer) hebben. Dus in dat geval kan er 550 kt opgeslagen worden. Dit vereist een dynamisch capaciteitsbeheersysteem dat rekening houdt met de huidige voorraadniveaus, geplande leveringen en verwachte toekomstige vraag.
-
+    Leveringsbeheer:
+        KdG kan tot 40 vrachtwagens per uur verwerken.
+        Geavanceerde planning en real-time updates zijn essentieel.
+    Betaling voor opslag:
+        Leveranciers betalen op basis van gewicht en opslagduur.
+        Tarieven variëren per grondstof, met kortingen voor grote volumes.
+    Voorraadbeheer:
+        Gebruik van RFID-technologie en barcodescanning voor nauwkeurige tracking.
+    Beschikbaarheid van opslagruimte:
+        Leveringen zijn alleen mogelijk bij voldoende opslagruimte (minder dan 80% vol).
+        elk magazijn heeft een maximum opslag capaciteit van 500kt met een overloopcapaciteit tot 550kt.
+        Dynamisch capaciteitsbeheer is noodzakelijk.
 Kopers
 
 Beschrijving
@@ -116,20 +109,21 @@ Opslag
     Een magazijn kan 500 kt grondstoffen bevatten (exclusief de overflowcapaciteit voor een dag) Dit is de standaard opslagcapaciteit van elk magazijn.
     Een inkooporder kan maximaal 150 kt grondstof bevatten, we gaan ervan uit dat elk schip zijn eigen PO steeds kan vervoeren. Dit is de maximale hoeveelheid grondstoffen die per inkooporder kan worden verwerkt.
 
-Zeker, hier is de opgekuiste en uitgebreide versie van het vierde deel van de Markdown, klaar voor gebruik in een RAG-applicatie:
-
 Prijzen:
 
     KdG stuurt elke dag een factuur naar zijn klanten (US-18). Er wordt commissie opgebouwd over de PO's en opslagkosten. De commissie op de PO’s kan wel tussentijds opgevraagd worden. Dit biedt klanten de mogelijkheid om hun kosten in realtime te monitoren en hun cashflow te beheren.
     Het berekenen van de commissie is eenvoudig. We nemen het totale bedrag van de PO maal ons commissiepercentage. Voorbeeld: we hebben een PO van 100 kt ijzererts en 50 kt gips. Wij berekenen de prijs per ton per materiaal en nemen 1% (onze commissie) van het totaalbedrag. IJzererts kost momenteel 110$ per ton en gips 13$ per ton. Dus een totaal van (110 * 100.000 + 13 * 50.000) * 0,01 = 116.500$ commissie voor deze zending. Deze transparante berekening zorgt voor duidelijkheid en vertrouwen tussen KdG en haar klanten.
     Opslagprijzen kan je ook eenvoudig berekenen. Per ton geldt een vast bedrag per 24 uur, afhankelijk van de materiaalsoort per ton. Gips is het goedkoopste materiaal en kost 1$ per dag per ton. De opslagkosten worden berekend op basis van het gewicht en de opslagduur, wat zorgt voor een eerlijke en kosteneffectieve prijsstelling. Bijvoorbeeld: Laten we zeggen dat we 100 ton hebben die in 4 vrachtwagenladingen arriveert:
 
-Aankomst	Mat.	ton	Opslagkosten	# dagen	kosten in $
-27/07/2024 09:00 uur	gips	25	1$/ton/dag	3	75
-27/07/2024 21:00 uur	gips	25	1$/ton/dag	2	50
-28/07/2024 09:00 uur	gips	25	1$/ton/dag	2	50
-29/07/2024 09:00 uur	gips	25	1$/ton/dag	1	25
+
+| Aankomst              | Mat.  | ton  | Opslagkosten  | # dagen | Kosten in $ |
+|-----------------------|---|---|---|---------|-------------|
+| 27/07/2024 09:00 uur  | gips  |  25 |1$/ton/dag   | 3       | 75          | 
+| 27/07/2024  21:00 uur | gips  |  25 |1$/ton/dag   | 2       | 50          |
+| 28/07/2024  09:00 uur |  gips | 25  | 1$/ton/dag   |  2       | 50          |
+| 29/07/2024   09:00 uur         |gips |25| 1$/ton/dag| 1       | 25          |
 berekend op 30/07/2024 09:01					200
+
 
 Laten we zeggen dat we een PO hebben die 30 ton van dit materiaal nodig heeft. We laden eerst 25 ton van het oudste materiaal (3 dagen) en nog eens 5 ton van de lading geleverd op 27/07 21:00 uur. Als er de volgende dagen geen materiaal wordt toegevoegd, hebben we de volgende berekening:
 Aankomst	Mat.	ton	Opslagkosten	# dagen	kosten in $
@@ -137,16 +131,20 @@ Aankomst	Mat.	ton	Opslagkosten	# dagen	kosten in $
 27/07/2024 21:00 uur	gips	20	1$/ton/dag	3	60
 28/07/2024 09:00 uur	gips	25	1$/ton/dag	3	75
 29/07/2024 09:00 uur	gips	25	1$/ton/dag	2	50
+
+
+| Aankomst              | Mat.  | ton | Opslagkosten  | # dagen | Kosten in $ |
+|-----------------------|---|-----|---|---------|-------------|
+| 27/07/2024 09:00 uur  | gips  | 0   |1$/ton/dag   | 4       | 0           | 
+| 27/07/2024  21:00 uur | gips  | 20  |1$/ton/dag   | 3       | 60          |
+| 28/07/2024  09:00 uur |  gips | 25  | 1$/ton/dag   | 3       | 75          |
+| 29/07/2024   09:00 uur         |gips | 25  | 1$/ton/dag| 2       | 50          |
 berekend op 31/07/2024 09:01					185
 
 De opslagkosten worden elke dag om 9:00 uur berekend (US-18). Dit zorgt voor een consistente en tijdige facturering.
 
     Op moment van levering wordt de opslagprijs voor die levering bepaald en “vastgeklikt”. Als er dus op 27/07 een levering is van 10 ton gips en de opslagprijs is $1/ton/dag en op 28/07 gaat de prijs met 10% omhoog naar $1.1/ton/dag dan zal de levering van 27/07 op de berekening van 28/07 gelijk zijn aan $20, niet $21, want de prijs op moment van levering was $1/ton/dag. Leveringen die na de prijsstijging gedaan worden, zullen dan wel aan $1.1/ton/dag aangerekend worden. Dit zorgt voor voorspelbaarheid en stabiliteit in de opslagkosten, zelfs bij prijsschommelingen. Dit geeft het volgende effect:
 
-Aankomst	Mat.	ton	Opslagkosten	# dagen	kosten in $
-27/07/2024 21:00 uur	gips	10	1$/ton/dag	2	20
-28/07/2024 21:00 uur	gips	10	1.1$/ton/dag	1	11
-berekend op 30/07/2024 09:01					31
 
 Deze gedetailleerde prijs- en opslagstrategie zorgt voor transparantie, voorspelbaarheid en eerlijkheid in de financiële transacties tussen KdG en haar klanten.
 
@@ -154,66 +152,140 @@ Functionaliteit
 
 Magazijn Systeem
 
-    Beheer magazijninformatie, inclusief opslagcapaciteit en voorraadniveaus van grondstoffen, klant van het magazijn. (US-11, US-16) Dit omvat het bijhouden van de maximale capaciteit van elk magazijn, de huidige voorraadniveaus van elke grondstof, en de klant aan wie het magazijn is toegewezen. Het systeem moet ook in staat zijn om de opslagcapaciteit en voorraadniveaus in realtime bij te werken.
-    Houd gegevens bij van de soorten en hoeveelheden opgeslagen mineralen. (US-15) Dit omvat het registreren van het type mineraal, de hoeveelheid in ton, en de datum en tijd van opslag. Het systeem moet ook in staat zijn om de voorraadniveaus bij te werken wanneer mineralen worden toegevoegd of verwijderd.
-    Bereken de factuur per klant (1 factuur per dag per klant (verkopers)) (US-18) Dit omvat het berekenen van de opslagkosten en commissie op de geleverde PO's voor elke klant.
-        Bereken de opslagkosten per dag per klant: De opslagkosten worden berekend op basis van het gewicht van de opgeslagen mineralen, de opslagduur en de opslagprijs per ton per dag. Het systeem moet in staat zijn om de opslagkosten voor elke klant afzonderlijk te berekenen.
-        Bereken de commissie op de geleverde PO’s per dag per klant, maar dit moet ook “op aanvraag” kunnen indien de klant dit wenst (informatief): De commissie wordt berekend als een percentage van de totale waarde van de geleverde PO's. Het systeem moet in staat zijn om de commissie voor elke klant afzonderlijk te berekenen, zowel dagelijks als op aanvraag.
-        Er mag niet dubbel gefactureerd worden aan een klant! Het systeem moet ervoor zorgen dat elke klant slechts één factuur per dag ontvangt, met daarin alle relevante kosten en commissies.
+Het magazijnsysteem is verantwoordelijk voor het efficiënt beheren van de opslagcapaciteit, voorraadniveaus, en klantinformatie van het magazijn. Dit systeem biedt een volledig overzicht van alle opgeslagen grondstoffen en de bijbehorende klantgegevens.
+Beheer van magazijninformatie
+
+Het systeem moet in staat zijn om gedetailleerde informatie over het magazijnbeheer vast te leggen en bij te houden. Dit omvat:
+
+    Opslagcapaciteit: Elke opslaglocatie binnen het magazijn moet worden geregistreerd met de maximale capaciteit in tonnage.
+    Voorraadniveaus: Het systeem dient de huidige voorraadniveaus van verschillende grondstoffen te monitoren en automatisch bij te werken wanneer voorraden veranderen door aanvoer of afname.
+    Klanttoewijzing: Elk magazijn moet gekoppeld kunnen worden aan specifieke klanten. Dit houdt in dat het systeem moet bijhouden welke klant gebruikmaakt van welke opslagruimte, inclusief bijbehorende contractinformatie en afspraken.
+    Realtime updates: Alle gegevens over capaciteit en voorraadniveaus moeten in realtime worden bijgewerkt, zodat gebruikers altijd beschikken over de meest actuele informatie.
+
+Gegevensregistratie van opgeslagen mineralen
+
+Het systeem registreert uitgebreide gegevens over de opgeslagen mineralen, waaronder:
+
+    Type mineraal: Elk mineraal moet worden geclassificeerd op basis van zijn soort, bijvoorbeeld koper, ijzererts of andere grondstoffen.
+    Hoeveelheid: De hoeveelheid opgeslagen mineraal wordt gemeten in tonnen, en deze gegevens worden automatisch bijgewerkt bij aan- of afvoer.
+    Datum en tijd van opslag: Voor een nauwkeurige administratie worden de datum en het tijdstip van opslag geregistreerd, zodat duidelijk is wanneer een bepaalde hoeveelheid mineraal is toegevoegd of verwijderd.
+
+Facturatie per klant
+
+Het systeem berekent de kosten voor klanten op een dagelijkse basis en zorgt ervoor dat er geen dubbele facturatie plaatsvindt. Dit omvat:
+
+    Dagelijkse opslagkosten: De opslagkosten worden berekend op basis van drie factoren: het gewicht van de opgeslagen mineralen, de duur van de opslag, en een vastgestelde opslagprijs per ton per dag. Elke klant ontvangt een afzonderlijke factuur die de totale kosten voor de opslag van die dag weergeeft.
+    Commissieberekening: Voor geleverde inkooporders (Purchase Orders, PO’s) wordt een commissie berekend. Deze commissie bestaat uit een percentage van de totale waarde van de geleverde goederen. Het systeem biedt de mogelijkheid om deze berekeningen dagelijks of op verzoek van de klant uit te voeren.
+    Voorkomen van dubbele facturatie: Het systeem moet ervoor zorgen dat elke klant slechts één factuur per dag ontvangt waarin alle relevante kosten en commissies worden samengevoegd.
 
 Landzijde Systeem
 
-    Plan de aankomst van vrachtwagens om een efficiënte verwerking (40 per uur) te garanderen en opstoppingen te voorkomen (US-9). Dit omvat het maken van afspraken voor vrachtwagens, het beheren van de wachtrij voor vrachtwagens zonder afspraak, en het toewijzen van weegbrugnummers en magazijnnummers aan vrachtwagens.
-    Houd een logboek bij van geplande en werkelijke aankomsttijden (US-9, US-10). Dit omvat het registreren van de geplande aankomsttijd, de werkelijke aankomsttijd en eventuele vertragingen. Het systeem moet ook in staat zijn om rapporten te genereren over de aankomsttijden van vrachtwagens.
-    Houd een logboek bij van vertrek. (US-10) Dit omvat het registreren van de vertrektijd van elke vrachtwagen. Het systeem moet ook in staat zijn om rapporten te genereren over de vertrektijden van vrachtwagens.
-    Registreer het gewicht van de vrachtwagens die het magazijn binnenkomen en verlaten. Dit omvat het registreren van het brutogewicht, het tarragewicht en het nettogewicht van elke vrachtwagen. Het systeem moet ook in staat zijn om rapporten te genereren over de gewichten van vrachtwagens.
-    Bereken het nettogewicht van de geleverde mineralen (US-8). Het nettogewicht wordt berekend door het tarragewicht af te trekken van het brutogewicht. Het systeem moet in staat zijn om het nettogewicht voor elke vrachtwagen afzonderlijk te berekenen.
+Het landzijde systeem is ontworpen om de aankomst en verwerking van vrachtwagens te coördineren, wachttijden te minimaliseren en een efficiënte goederenstroom te waarborgen.
+Plannen van aankomsten van vrachtwagens
 
-Dit systeem heeft een web interface op basis van Spring MVC en Thymeleaf. Dit biedt een gebruiksvriendelijke interface voor het beheren van de landzijde operaties.
+Om een optimale goederenstroom te garanderen, moet het systeem de aankomst van vrachtwagens plannen en registreren. De kernfunctionaliteiten zijn:
+
+    Afsprakenbeheer: Vrachtwagens kunnen vooraf een afspraak maken om ervoor te zorgen dat er voldoende capaciteit beschikbaar is voor het lossen of laden van goederen.
+    Beheer van wachtrijen: Vrachtwagens zonder afspraak worden in een wachtrij geplaatst. Het systeem wijst automatisch weegbrugnummers en magazijnnummers toe aan vrachtwagens zodra er capaciteit beschikbaar is.
+    Verwerkingscapaciteit: Het systeem moet zo worden ingericht dat het een maximale verwerkingscapaciteit van veertig vrachtwagens per uur kan ondersteunen, om opstoppingen te voorkomen.
+
+Logboek van aankomst- en vertrektijden
+
+Het systeem houdt een nauwkeurige administratie bij van de aankomst- en vertrektijden van vrachtwagens:
+
+    Aankomstregistratie: De geplande en werkelijke aankomsttijden van vrachtwagens worden geregistreerd, evenals eventuele vertragingen of afwijkingen van de oorspronkelijke planning.
+    Vertrekregistratie: Het tijdstip waarop vrachtwagens het terrein verlaten, wordt eveneens vastgelegd.
+    Rapportage: Er kunnen rapporten worden gegenereerd over aankomst- en vertrektijden, waardoor het mogelijk is om trends in vertragingen of operationele knelpunten te identificeren.
+
+Gewichtsregistratie van vrachtwagens
+
+Het systeem moet nauwkeurig de gewichten van vrachtwagens registreren:
+
+    Brutogewicht: Het totale gewicht van de vrachtwagen inclusief lading wordt bij aankomst en vertrek geregistreerd.
+    Tarragewicht: Het gewicht van de lege vrachtwagen wordt vastgesteld, zodat dit kan worden afgetrokken van het brutogewicht.
+    Nettogewicht: Het systeem berekent automatisch het nettogewicht van de geleverde mineralen door het tarragewicht af te trekken van het brutogewicht. Dit gewicht vormt de basis voor verdere facturering en registratie.
+    Rapportage: Er worden rapporten gegenereerd over de gewichtsregistraties, inclusief afwijkingen tussen het bruto- en nettogewicht voor kwaliteitscontroles.
+
 
 Waterzijde Systeem
 
-    Uitgaande zendingen volgen. Dit omvat het bijhouden van de status van uitgaande zendingen, inclusief het schipnummer, de PO-nummers en de hoeveelheid verzonden mineralen.
-    Inspectieoperaties, bunkeroperaties (US-20, US-21). Dit omvat het plannen en registreren van inspectieoperaties (IO) en bunkeroperaties (BO). Het systeem moet in staat zijn om de status van elke IO en BO bij te houden en om rapporten te genereren over de IO's en BO's.
+Het waterzijde systeem is verantwoordelijk voor het beheren en monitoren van alle activiteiten die verband houden met de uitgaande zendingen via schepen. Dit systeem zorgt voor een efficiënte coördinatie van het laden, inspecteren en bunkeren van schepen, evenals een nauwkeurige registratie van alle gerelateerde processen.
+Volgen van uitgaande zendingen
 
+Het systeem houdt gedetailleerd toezicht op uitgaande zendingen van mineralen. De belangrijkste functies omvatten:
 
-Oplossing:
+    Statusregistratie: Het bijhouden van de actuele status van uitgaande zendingen, inclusief het stadium van verwerking en verzending.
+    Schipnummer: Elk uitgaand schip wordt geïdentificeerd met een uniek schipnummer, wat zorgt voor duidelijke traceerbaarheid en administratie.
+    PO-nummerbeheer: Het systeem koppelt de verzonden mineralen aan de bijbehorende inkooporders (Purchase Orders, PO’s), zodat het eenvoudig is om de hoeveelheid verzonden mineralen aan specifieke orders toe te wijzen.
+    Hoeveelheidsregistratie: De hoeveelheid verzonden mineralen wordt nauwkeurig geregistreerd en gelogd voor rapportagedoeleinden en facturatie.
 
-Een softwareoplossing die de volgende functionaliteiten biedt:
+Inspectie- en bunkeroperaties
 
-    Geautomatiseerde afspraakplanning en toegang:
-        Verkopers kunnen eenvoudig afspraken inplannen voor vrachtwagens, waardoor een soepele doorstroming op het terrein wordt gegarandeerd.
-        Kentekenherkenning voor vrachtwagens automatiseert de toegang tot het terrein.
-        Een FIFO-wachtrijsysteem beheert de aankomst van vrachtwagens zonder afspraak en vrachtwagens die buiten hun afspraak venster aankomen.
-    Real-time locatie en gewichtsbeheer:
-        Vrachtwagenchauffeurs ontvangen duidelijke instructies over weegbrug- en magazijnlocaties.
-        Geïntegreerde weegbrugfunctionaliteit registreert nauwkeurig het gewicht van de vrachtwagens en genereert weegbrugtickets.
-        Registratie van de PDT voor de vrachtwagen chauffeur.
-    Geavanceerd voorraadbeheer:
-        Magazijnmanagers hebben een real-time overzicht van de voorraadniveaus en kunnen de grondstofstromen effectief beheren.
-        Automatische toewijzing van de oudste voorraad voor verlading minimaliseert opslagkosten.
-        Nauwkeurige registratie van magazijnvolumes en voorraadniveaus.
-        De mogelijkheid om kostprijzen en opslag prijzen te wijzigen.
-    Financieel beheer en rapportage:
-        Automatische berekening van commissies op vervulde aankooporders.
-        Geautomatiseerde facturering van opslagkosten.
-        Overzicht van vervulde en openstaande aankooporders.
-    Scheepslogistiek:
-        Registratie van aankooporders en scheepsinformatie bij aankomst.
-        Overzicht van inspectie, bunkeren en laadactiviteiten.
-        Overzicht van alle handelingen voor de scheepskapitein.
-    Flexibiliteit en schaalbaarheid:
-        Het systeem is ontworpen om toekomstige uitbreidingen te ondersteunen, zoals:
-            Meer soorten grondstoffen en magazijnen.
-            Volumegebaseerde magazijncapaciteit.
-            Variabele opslagkostenberekening.
-            Het verwerken van gefaalde inspecties.
+Het systeem coördineert inspectie- en bunkeroperaties om de operationele efficiëntie en naleving van regelgeving te waarborgen:
 
-Verwachte voordelen:
+    Planning van inspecties: Alle inspectieoperaties (IO) worden gepland en geregistreerd. Dit omvat de datum, tijd, het schip en de verantwoordelijke inspecteur.
+    Statusbeheer van inspecties: Het systeem houdt de voortgang en resultaten van elke inspectie bij, inclusief goedkeuringen en eventuele tekortkomingen.
+    Bunkeroperaties: Het plannen en registreren van bunkeroperaties (BO) – waaronder het bijvullen van brandstof en andere noodzakelijke bevoorradingen – wordt volledig beheerd binnen het systeem.
+    Rapportage: Gedetailleerde rapporten over uitgevoerde inspecties en bunkeroperaties kunnen worden gegenereerd, waardoor transparantie en controle over de scheepsactiviteiten wordt gewaarborgd.
 
-    Verhoogde operationele efficiëntie en doorvoer.
-    Verminderde wachttijden en logistieke kosten.
-    Verbeterde nauwkeurigheid van voorraadbeheer.
-    Betere zichtbaarheid en controle over de logistieke operaties.
-    Geoptimaliseerde financiële processen en rapportage.
-    Betere klanttevredenheid.
+Oplossing: Geïntegreerde Softwareoplossing voor Logistiek Beheer
+
+Deze softwareoplossing integreert verschillende functies om de efficiëntie, transparantie en schaalbaarheid van logistieke processen te verbeteren.
+Geautomatiseerde afspraakplanning en toegang
+
+Het systeem biedt functies die het plannen en beheren van afspraken voor inkomend en uitgaand verkeer vergemakkelijken:
+
+    Afsprakenbeheer voor vrachtwagens: Verkopers kunnen eenvoudig afspraken plannen, wat bijdraagt aan een soepele doorstroming op het terrein en opstoppingen voorkomt.
+    Kentekenherkenning: Een geautomatiseerd kentekenherkenningssysteem zorgt voor een snelle en veilige toegang van vrachtwagens tot het terrein.
+    FIFO-wachtrijsysteem: Het systeem implementeert een "First In, First Out" wachtrijsysteem om aankomstvolgorde te beheren voor vrachtwagens zonder afspraak of vrachtwagens die buiten hun afgesproken tijdsvenster arriveren.
+
+Realtime locatie- en gewichtsbeheer
+
+Het systeem biedt realtime monitoring en begeleiding voor vrachtwagenchauffeurs:
+
+    Weegbrug- en magazijninstructies: Chauffeurs ontvangen duidelijke aanwijzingen over welke weegbrug en welk magazijn ze moeten gebruiken.
+    Geïntegreerde weegbrugfunctionaliteit: Het gewicht van de vrachtwagens wordt nauwkeurig geregistreerd, en het systeem genereert automatisch weegbrugtickets.
+    Registratie van de PDT: De persoonlijke gegevens van de vrachtwagenchauffeur worden vastgelegd via een persoonlijke digitale token (PDT).
+
+Geavanceerd voorraadbeheer
+
+Het voorraadbeheersysteem stelt magazijnmanagers in staat om hun opslagcapaciteit effectief te beheren:
+
+    Realtime voorraadoverzicht: Managers krijgen een overzicht van actuele voorraadniveaus, inclusief de soorten en hoeveelheden opgeslagen grondstoffen.
+    Automatische voorraadtoewijzing: Het systeem wijst automatisch de oudste voorraad toe voor verzending, waardoor opslagkosten worden geminimaliseerd.
+    Volumeregistratie: Nauwkeurige registratie van magazijnvolumes en voorraadniveaus zorgt voor optimale benutting van opslagcapaciteit.
+    Prijsbeheer: Beheerders kunnen kostprijzen en opslagprijzen aanpassen op basis van veranderende marktomstandigheden of contractuele afspraken.
+
+Financieel beheer en rapportage
+
+Het systeem automatiseert verschillende financiële processen, waaronder:
+
+    Berekening van commissies: Commissies op vervulde aankooporders worden automatisch berekend op basis van vooraf gedefinieerde percentages.
+    Geautomatiseerde facturering: Opslagkosten worden automatisch gefactureerd op basis van gewicht, duur en afgesproken tarieven.
+    Orderoverzicht: Gebruikers kunnen eenvoudig de status van vervulde en openstaande aankooporders bekijken en beheren.
+
+Scheepslogistiek
+
+Het systeem biedt uitgebreide functies voor het beheer van scheepsactiviteiten:
+
+    Registratie van scheepsinformatie: Bij aankomst worden aankooporders en scheepsgegevens geregistreerd voor een efficiënte afhandeling.
+    Operationeel overzicht: Het systeem geeft een duidelijk overzicht van inspecties, bunkeractiviteiten en laadprocessen.
+    Informatie voor de scheepskapitein: Alle relevante operationele informatie wordt gebundeld en overzichtelijk gepresenteerd aan de kapitein voor een soepele coördinatie.
+
+Flexibiliteit en schaalbaarheid
+
+Het systeem is ontworpen om mee te groeien met toekomstige behoeften, zoals:
+
+    Ondersteuning voor meerdere soorten grondstoffen en uitbreiding van het aantal magazijnen.
+    Volumegebaseerde capaciteitsberekeningen voor efficiënter ruimtegebruik.
+    Flexibele opslagkosten die kunnen variëren op basis van vraag en aanbod.
+    Verwerking van gefaalde inspecties met aangepaste vervolgprocedures.
+
+Verwachte voordelen van de oplossing
+
+    Verbeterde operationele efficiëntie: Het systeem verhoogt de verwerkingssnelheid en capaciteit van het logistieke proces.
+    Verminderde wachttijden: Automatisering zorgt voor snellere verwerking en kortere wachtrijen, wat leidt tot lagere logistieke kosten.
+    Nauwkeurig voorraadbeheer: Realtime gegevens zorgen voor betere controle over de opgeslagen mineralen en grondstoffen.
+    Betere zichtbaarheid en controle: Alle logistieke operaties zijn inzichtelijk, waardoor planning en beheer efficiënter verlopen.
+    Geoptimaliseerde financiële processen: Automatische facturering en commissieberekening vereenvoudigen het financiële beheer.
+    Hogere klanttevredenheid: Efficiëntere processen leiden tot snellere leveringen, nauwkeurige rapportages en betere service voor klanten.
