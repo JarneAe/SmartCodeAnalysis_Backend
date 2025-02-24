@@ -1,21 +1,21 @@
 services:
-  web:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./:/app/
-    networks:
-      - fastapi-net
-    depends_on:
-      ollama:
-        condition: service_started
-    environment:
-      - OLLAMA_URI=http://ollama:11434/v1
-    env_file:
-      - .env # Must contain LOGFIRE_TOKEN
+#  web:
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - ./:/app/
+#    networks:
+#      - fastapi-net
+#    depends_on:
+#      ollama:
+#        condition: service_started
+#    environment:
+#      - OLLAMA_URI=http://ollama:11434/v1
+#    env_file:
+#      - .env # Must contain LOGFIRE_TOKEN
 
   ollama:
     build:
@@ -41,6 +41,19 @@ services:
               count: 1
               capabilities: [ gpu ]
 
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - fastapi-net
+
+
 networks:
   fastapi-net:
     driver: bridge
+
+volumes:
+  qdrant-data:
