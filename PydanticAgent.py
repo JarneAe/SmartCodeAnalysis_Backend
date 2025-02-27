@@ -1,14 +1,13 @@
 import asyncio
 import os
-
-from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
+from Models.CodeRequest import CodeRequest
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
 
-OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434/v1")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
@@ -18,7 +17,7 @@ business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
-    base_url='http://localhost:11434/v1',
+    base_url=OLLAMA_URI,
     api_key='ollama',
 )
 
@@ -72,13 +71,10 @@ def add_business_context() -> str:
 
 message_history = []
 
-class CodeRequest(BaseModel):
-    code_snippet: str
+
 
 async def explain_business(request: CodeRequest):
-    # Define a synchronous wrapper that creates its own event loop.
     def run_agent():
-        # This ensures the thread gets a new event loop.
         return asyncio.run(
             business_explanation_agent.run(
                 request.code_snippet,
@@ -87,7 +83,6 @@ async def explain_business(request: CodeRequest):
             )
         )
 
-    # Offload the blocking work to a worker thread.
     result = await asyncio.to_thread(run_agent)
     message_history.extend(result.new_messages())
     return {"explanation": result.data}
