@@ -18,7 +18,7 @@ business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
-    base_url=OLLAMA_URI,
+    base_url='http://localhost:11434/v1',
     api_key='ollama',
 )
 
