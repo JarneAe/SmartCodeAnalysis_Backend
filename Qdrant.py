@@ -2,9 +2,9 @@ import os
 import ollama
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import models
-from PDFConvertor import PDFConvertor
 import nltk
 from nltk.tokenize import sent_tokenize
+from qdrant_client.http.models import models, CountResult
 
 # Download necessary NLTK data
 nltk.download('punkt')
@@ -13,9 +13,12 @@ nltk.download('punkt')
 COLLECTION_NAME = "TestCollection"
 SAVE_DIR = "markdown_files"
 
-# Initialize clients
-qclient = QdrantClient(url="http://localhost:6333")
-oclient = ollama.Client("localhost")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
+oclient = ollama.Client(OLLAMA_URI)
+
+QDRANT_URI = os.getenv("QDRANT_URI", "http://localhost:6333")
+qclient = QdrantClient(url=QDRANT_URI)
+
 
 
 def chunk_markdown_by_sentences(markdown_text, max_chars=500):
@@ -73,7 +76,7 @@ def upsert_embeddings(texts, file_name):
     qclient.upsert(collection_name=COLLECTION_NAME, points=points)
 
 
-def search_similar_text(query_text, top_k=5):
+def search_similar_text_qdrant(query_text, top_k=5):
     """
     Embed the input text and return the top_k most similar results from Qdrant.
     """
@@ -98,54 +101,41 @@ def search_similar_text(query_text, top_k=5):
 
     return results
 
+def instantiate_qdrant_and_fill_collection():
+    nltk.download('punkt_tab')
+    markdown_file = "markdown_files/improved_case.md"
 
-markdown_file = "markdown_files/improved_case.md"
-with open(markdown_file, "r", encoding="utf-8") as file:
-    markdown_text = file.read()
 
-chunks = chunk_markdown_by_sentences(markdown_text, max_chars=300)
-upsert_embeddings(chunks, file_name=os.path.basename(markdown_file))
+    with open(markdown_file, "r", encoding="utf-8") as file:
+        markdown_text = file.read()
 
-print(f"Processed {len(chunks)} fine-grained chunks from {markdown_file} and upserted successfully.")
-print(f"Markdown saved in directory: {SAVE_DIR}")
+    chunks = chunk_markdown_by_sentences(markdown_text, max_chars=300)
+    upsert_embeddings(chunks, file_name=os.path.basename(markdown_file))
 
-query = """
-public Long getWarehouseIdByLicensePlate(String licensePlate) {
-    try {
-        Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
-        if (data == null) {
-            throw new NoSuchElementException("No data found for license plate: " + licensePlate);
-        }
+    return "Qdrant collection filled successfully."
 
-        Long sellerId = data.getFirst();
-        String mineralName = data.getSecond();
 
-        log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
+def get_collection_details(collection_name: str) -> CountResult:
+    """
+    Retrieve details about a specific collection in the Qdrant database.
 
-        String url = String.format(warehouseApiUrl, sellerId, mineralName);
+    Args:
+    collection_name (str): The name of the collection to retrieve details for.
 
-        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
+    Returns:
+    Dict[str, Any]: A dictionary containing details about the collection.
+    """
+    # Placeholder implementation
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            Long warehouseId = response.getBody();
-            log.info("Warehouse id retrieved: {}", warehouseId);
-            return warehouseId;
-        } else {
-            log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
-            throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
-        }
-    } catch (NoSuchElementException e) {
-        log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
-        throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
-    }
-}
-"""
+    return qclient.count(
+        collection_name=collection_name,
+        count_filter=models.Filter(
+            must=[
+                models.FieldCondition(key="color", match=models.MatchValue(value="red")),
+            ]
+        ),
+        exact=True,
+    )
 
-results = search_similar_text(query)
 
-for i, result in enumerate(results, 1):
-    print(f"Result {i}:")
-    print(f"File: {result['file_name']}")
-    print(f"Chunk Index: {result['chunk_index']}")
-    print(f"Similarity Score: {result['similarity_score']:.4f}")
-    print(f"Text: {result['text']}\n")
+
