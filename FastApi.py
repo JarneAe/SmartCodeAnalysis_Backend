@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
 from PydanticAgent import explain_business, CodeRequest
 from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant
-from typing import Dict, Any
+from typing import Dict, Any, List
+from fastapi.responses import RedirectResponse
 
 app = FastAPI(
     title="Smart Code Analysis",
@@ -54,7 +55,7 @@ async def instantiate_qdrant():
         raise HTTPException(status_code=500, detail=f"Error initializing Qdrant: {str(e)}")
 
 
-@app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=Dict[str, Any])
+@app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=List[Dict[str, Any]])
 async def search_similar_text(
     query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant")
 ):
@@ -68,8 +69,12 @@ async def search_similar_text(
     - JSON response containing similar text results.
     """
     try:
-        return search_similar_text_qdrant(query_text)
+        return search_similar_text_qdrant(query_text)  # This already returns a list
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=f"Invalid search query: {ve}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")
+
+@app.get("/", include_in_schema=False)
+async def docs_redirect():
+    return RedirectResponse(url='/docs')
