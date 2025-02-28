@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from pydantic import BaseModel
-from pydantic_ai import Agent, RunContext
+from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
 
