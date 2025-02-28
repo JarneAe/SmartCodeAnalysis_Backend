@@ -139,36 +139,3 @@ def get_collection_details(collection_name: str) -> CountResult:
 
 
 
-query = """
-public Long getWarehouseIdByLicensePlate(String licensePlate) {
-    try {
-        Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
-        if (data == null) {
-            throw new NoSuchElementException("No data found for license plate: " + licensePlate);
-        }
-
-        Long sellerId = data.getFirst();
-        String mineralName = data.getSecond();
-
-        log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
-
-        String url = String.format(warehouseApiUrl, sellerId, mineralName);
-
-        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            Long warehouseId = response.getBody();
-            log.info("Warehouse id retrieved: {}", warehouseId);
-            return warehouseId;
-        } else {
-            log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
-            throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
-        }
-    } catch (NoSuchElementException e) {
-        log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
-        throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
-    }
-}
-"""
-
-
