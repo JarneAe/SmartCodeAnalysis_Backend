@@ -13,3 +13,7 @@ with torch.no_grad():
     embeddings = model(**inputs).last_hidden_state.mean(dim=1)  # Mean pooling
 
 print(embeddings)
+
+def embed_chunks(chunked_codebase: list[dict[str, int | str]]):
+    for x in chunked_codebase:
+        print(x)
