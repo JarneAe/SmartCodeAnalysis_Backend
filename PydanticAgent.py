@@ -1,7 +1,5 @@
 import asyncio
 import os
-
-from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
@@ -10,7 +8,7 @@ from FormatCodeAgent import format_code
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
 
-OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434/v1")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
@@ -80,7 +78,6 @@ class CodeRequest(BaseModel):
 
 
 async def explain_business(request: CodeRequest):
-    # Define a synchronous wrapper that creates its own event loop.
     def run_agent():
         # This ensures the thread gets a new event loop.
         formatted_code = asyncio.run(
@@ -93,7 +90,6 @@ async def explain_business(request: CodeRequest):
             )
         )
 
-    # Offload the blocking work to a worker thread.
     result = await asyncio.to_thread(run_agent)
     message_history.extend(result.new_messages())
     logfire.info(f"Result: {result.data}")
