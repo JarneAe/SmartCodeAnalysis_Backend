@@ -2,9 +2,11 @@ import asyncio
 import os
 
 from pydantic import BaseModel
-from pydantic_ai import Agent
+from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
+
+from FormatCodeAgent import format_code
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
 
@@ -18,7 +20,7 @@ business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
-    base_url='http://localhost:11434/v1',
+    base_url=OLLAMA_URI,
     api_key='ollama',
 )
 
@@ -72,17 +74,21 @@ def add_business_context() -> str:
 
 message_history = []
 
+
 class CodeRequest(BaseModel):
     code_snippet: str
+
 
 async def explain_business(request: CodeRequest):
     # Define a synchronous wrapper that creates its own event loop.
     def run_agent():
         # This ensures the thread gets a new event loop.
+        formatted_code = asyncio.run(
+            format_code(request.code_snippet)
+        )
         return asyncio.run(
             business_explanation_agent.run(
-                request.code_snippet,
-                deps="TruckQueueService.java",
+                formatted_code,
                 message_history=message_history
             )
         )
@@ -90,4 +96,8 @@ async def explain_business(request: CodeRequest):
     # Offload the blocking work to a worker thread.
     result = await asyncio.to_thread(run_agent)
     message_history.extend(result.new_messages())
+    logfire.info(f"Result: {result.data}")
     return {"explanation": result.data}
+
+
+#asyncio.run(explain_business(request=CodeRequest(code_snippet="public Long getWarehouseIdByLicensePlate(String licensePlate) { try { Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);\n if (data == null) {\n throw new NoSuchElementException(\"No data found for license plate: \" + licensePlate);\n }\n\n Long sellerId = data.getFirst();\n String mineralName = data.getSecond();\n log.info(\"Fetching Warehouse id for seller with id {} and mineral {}\", sellerId, mineralName);\n\n String url = String.format(warehouseApiUrl, sellerId, mineralName);\n\n ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);\n\n if (response.getStatusCode().is2xxSuccessful()) {\n Long warehouseId = response.getBody();\n log.info(\"Warehouse id retrieved: {}\", warehouseId);\n return warehouseId;\n } else {\n log.error(\"Failed to retrieve warehouse id. Status code: {}\", response.getStatusCode());\n throw new CouldNotRetrieveWarehouseException(\"Failed to retrieve warehouse id. Status code: \" + response.getStatusCode());\n }\n } catch (NoSuchElementException e) {\n log.error(\"Error retrieving warehouse id for license plate: {}\", licensePlate, e);\n throw new CouldNotRetrieveWarehouseException(\"Error retrieving warehouse id for license plate: \" + licensePlate, e);\n }\n}")))
