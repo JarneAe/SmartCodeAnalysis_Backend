@@ -4,6 +4,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import models
 import nltk
 from nltk.tokenize import sent_tokenize
+from qdrant_client.http.models import models, CountResult
 
 # Download necessary NLTK data
 nltk.download('punkt')
@@ -12,9 +13,12 @@ nltk.download('punkt')
 COLLECTION_NAME = "TestCollection"
 SAVE_DIR = "markdown_files"
 
-# Initialize clients
-qclient = QdrantClient(url="http://localhost:6333")
-oclient = ollama.Client("localhost")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
+oclient = ollama.Client(OLLAMA_URI)
+
+QDRANT_URI = os.getenv("QDRANT_URI", "http://localhost:6333")
+qclient = QdrantClient(url=QDRANT_URI)
+
 
 
 def chunk_markdown_by_sentences(markdown_text, max_chars=500):
@@ -72,7 +76,7 @@ def upsert_embeddings(texts, file_name):
     qclient.upsert(collection_name=COLLECTION_NAME, points=points)
 
 
-def search_similar_text(query_text, top_k=5):
+def search_similar_text_qdrant(query_text, top_k=5):
     """
     Embed the input text and return the top_k most similar results from Qdrant.
     """
@@ -109,5 +113,62 @@ def instantiate_qdrant_and_fill_collection():
     upsert_embeddings(chunks, file_name=os.path.basename(markdown_file))
 
     return "Qdrant collection filled successfully."
+
+
+def get_collection_details(collection_name: str) -> CountResult:
+    """
+    Retrieve details about a specific collection in the Qdrant database.
+
+    Args:
+    collection_name (str): The name of the collection to retrieve details for.
+
+    Returns:
+    Dict[str, Any]: A dictionary containing details about the collection.
+    """
+    # Placeholder implementation
+
+    return qclient.count(
+        collection_name=collection_name,
+        count_filter=models.Filter(
+            must=[
+                models.FieldCondition(key="color", match=models.MatchValue(value="red")),
+            ]
+        ),
+        exact=True,
+    )
+
+
+
+query = """
+public Long getWarehouseIdByLicensePlate(String licensePlate) {
+    try {
+        Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);
+        if (data == null) {
+            throw new NoSuchElementException("No data found for license plate: " + licensePlate);
+        }
+
+        Long sellerId = data.getFirst();
+        String mineralName = data.getSecond();
+
+        log.info("Fetching Warehouse id for seller with id {} and mineral {}", sellerId, mineralName);
+
+        String url = String.format(warehouseApiUrl, sellerId, mineralName);
+
+        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            Long warehouseId = response.getBody();
+            log.info("Warehouse id retrieved: {}", warehouseId);
+            return warehouseId;
+        } else {
+            log.error("Failed to retrieve warehouse id. Status code: {}", response.getStatusCode());
+            throw new CouldNotRetrieveWarehouseException("Failed to retrieve warehouse id. Status code: " + response.getStatusCode());
+        }
+    } catch (NoSuchElementException e) {
+        log.error("Error retrieving warehouse id for license plate: {}", licensePlate, e);
+        throw new CouldNotRetrieveWarehouseException("Error retrieving warehouse id for license plate: " + licensePlate, e);
+    }
+}
+"""
 
 

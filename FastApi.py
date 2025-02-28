@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from PydanticAgent import explain_business, CodeRequest
-from Qdrant import instantiate_qdrant_and_fill_collection
-from database_methods.qdrant_methods import get_collection_details
+from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant
 
 app = FastAPI(
     title="Smart Code Analysis",
@@ -29,11 +28,10 @@ async def analyze_code(request: CodeRequest):
 
 
 
-@app.get("/qdrant/info",tags=["Qdrant"])
-async def get_qdrant_info(colection_name: str):
-    return get_collection_details(colection_name)
-
-
 @app.post("/qdrant/instantiate",tags=["Qdrant"])
 async def instantiate_qdrant():
     return instantiate_qdrant_and_fill_collection()
+
+@app.get("/qdrant/search_similar",tags=["Qdrant"])
+async def search_similar_text(query_text: str):
+    return search_similar_text_qdrant(query_text)
