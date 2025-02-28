@@ -1,14 +1,12 @@
+from pydantic import BaseModel
 import asyncio
 import os
-
-from pydantic import BaseModel
-from pydantic_ai import Agent
-from pydantic_ai.models.openai import OpenAIModel
 import logfire
 
-from FormatCodeAgent import format_code
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIModel
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 
@@ -44,13 +42,14 @@ def add_business_context() -> str:
         "- Why this process matters to the business\n\n"
         "### Business Context:\n"
         f"{business_context}\n\n"
+        "### Relevant Information from Knowledge Base:\n"
+        "{rag_context}\n\n" 
         "### Response Structure:\n"
         "1. **Practical use case:** Describe the specific business scenario where this code is used\n"
         "2. **Business impact:** Explain how this affects operational efficiency, costs, or revenue\n"
         "3. **User impact:** Describe how this affects the daily work of employees or customers\n"
         "4. **Why is this important:** Explain the strategic value to the business\n"
         "5. **Day in the life scenario:** Provide a concrete example of how this is used in daily operations\n\n"
-        "Put the main focus on the business context that was given and ensure that the explanation is clear and easy to understand for non-technical stakeholders.\n\n"
         "### Critical Constraints:\n"
         "Focus exclusively on:\n"
         "- Real-world business processes\n"
@@ -79,15 +78,11 @@ class CodeRequest(BaseModel):
     code_snippet: str
 
 
-async def explain_business(request: CodeRequest):
+async def explain_business(request: CodeRequest, formatted_code: str, rag_context: str):
     def run_agent():
-        # This ensures the thread gets a new event loop.
-        formatted_code = asyncio.run(
-            format_code(request.code_snippet)
-        )
         return asyncio.run(
             business_explanation_agent.run(
-                formatted_code,
+                formatted_code + "\n\n" + rag_context,
                 message_history=message_history
             )
         )
@@ -96,6 +91,3 @@ async def explain_business(request: CodeRequest):
     message_history.extend(result.new_messages())
     logfire.info(f"Result: {result.data}")
     return {"explanation": result.data}
-
-
-#asyncio.run(explain_business(request=CodeRequest(code_snippet="public Long getWarehouseIdByLicensePlate(String licensePlate) { try { Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);\n if (data == null) {\n throw new NoSuchElementException(\"No data found for license plate: \" + licensePlate);\n }\n\n Long sellerId = data.getFirst();\n String mineralName = data.getSecond();\n log.info(\"Fetching Warehouse id for seller with id {} and mineral {}\", sellerId, mineralName);\n\n String url = String.format(warehouseApiUrl, sellerId, mineralName);\n\n ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);\n\n if (response.getStatusCode().is2xxSuccessful()) {\n Long warehouseId = response.getBody();\n log.info(\"Warehouse id retrieved: {}\", warehouseId);\n return warehouseId;\n } else {\n log.error(\"Failed to retrieve warehouse id. Status code: {}\", response.getStatusCode());\n throw new CouldNotRetrieveWarehouseException(\"Failed to retrieve warehouse id. Status code: \" + response.getStatusCode());\n }\n } catch (NoSuchElementException e) {\n log.error(\"Error retrieving warehouse id for license plate: {}\", licensePlate, e);\n throw new CouldNotRetrieveWarehouseException(\"Error retrieving warehouse id for license plate: \" + licensePlate, e);\n }\n}")))
