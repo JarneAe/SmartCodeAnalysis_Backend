@@ -16,8 +16,8 @@ def chunk_file(file_name: str, content: bytes) -> list[dict[str, int | str]]:
 
     splitter = RecursiveCharacterTextSplitter.from_language(
         language=file_name_to_splitter_language(file_name),
-        chunk_size=200,
-        chunk_overlap=30
+        chunk_size=600,
+        chunk_overlap=50
     )
 
     chunks = splitter.split_text(text)
