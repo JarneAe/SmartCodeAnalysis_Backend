@@ -54,7 +54,6 @@ def add_business_context(run_context) -> str:
         "3. **User impact:** Describe how this affects the daily work of employees or customers\n"
         "4. **Why is this important:** Explain the strategic value to the business\n"
         "5. **Day in the life scenario:** Provide a concrete example of how this is used in daily operations\n\n"
-        "Put the main focus on the business context that was given and ensure that the explanation is clear and easy to understand for non-technical stakeholders.\n\n"
         "### Critical Constraints:\n"
         "Focus exclusively on:\n"
         "- Real-world business processes\n"
