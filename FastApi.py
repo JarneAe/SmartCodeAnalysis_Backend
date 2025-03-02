@@ -41,7 +41,7 @@ async def analyze_code(request: CodeRequest):
 
 
 @app.post("/qdrant/instantiate", tags=["Qdrant"], response_model=Dict[str, Any])
-async def instantiate_qdrant():
+def instantiate_qdrant():
     """
     Instantiates Qdrant and fills the collection with embeddings.
 
@@ -56,7 +56,7 @@ async def instantiate_qdrant():
 
 
 @app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=Dict[str, Any])
-async def search_similar_text(
+def search_similar_text(
     query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant")
 ):
     """

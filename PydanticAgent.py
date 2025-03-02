@@ -7,6 +7,7 @@ from pydantic_ai.models.openai import OpenAIModel
 import logfire
 
 from FormatCodeAgent import format_code
+from Models.CodeRequest import CodeRequest
 from Qdrant import search_similar_text_qdrant
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
@@ -76,10 +77,6 @@ def add_business_context(run_context) -> str:
     )
 
 message_history = []
-
-
-class CodeRequest(BaseModel):
-    code_snippet: str
 
 
 async def explain_business(request: CodeRequest):
