@@ -1,5 +1,7 @@
 import asyncio
 import os
+
+from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import logfire
@@ -13,12 +15,12 @@ OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
-pdf_convertor = PDFConvertor(file_path="files/SA 24-25 - Mineral Flow-1.pdf")
+pdf_convertor = PDFConvertor(file_path="files/improved_case.pdf")
 business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
-    base_url=OLLAMA_URI,
+    base_url=OLLAMA_URI + "/v1",
     api_key='ollama',
 )
 

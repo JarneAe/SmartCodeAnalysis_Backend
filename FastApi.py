@@ -51,6 +51,7 @@ async def instantiate_qdrant():
     try:
         return instantiate_qdrant_and_fill_collection()
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=f"Error initializing Qdrant: {str(e)}")
 
 
@@ -70,6 +71,6 @@ async def search_similar_text(
     try:
         return search_similar_text_qdrant(query_text)
     except ValueError as ve:
-        raise HTTPException(status_code=400, detail=f"Invalid search query: {ve}")
+        raise HTTPException(status_code=400, detail=f"Invalid search query: {str(ve)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")

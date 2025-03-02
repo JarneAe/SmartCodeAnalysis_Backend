@@ -4,13 +4,13 @@ from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 import asyncio
 
-OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434/v1")
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 
 logfire.configure()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
-    base_url=OLLAMA_URI,
+    base_url=OLLAMA_URI + "/v1",
     api_key='ollama',
 )
 

@@ -20,7 +20,6 @@ QDRANT_URI = os.getenv("QDRANT_URI", "http://localhost:6333")
 qclient = QdrantClient(url=QDRANT_URI)
 
 
-
 def chunk_markdown_by_sentences(markdown_text, max_chars=500):
     """
     Split the text into smaller chunks by sentences with a max character limit.
@@ -101,10 +100,10 @@ def search_similar_text_qdrant(query_text, top_k=5):
 
     return results
 
+
 def instantiate_qdrant_and_fill_collection():
     nltk.download('punkt_tab')
     markdown_file = "markdown_files/improved_case.md"
-
 
     with open(markdown_file, "r", encoding="utf-8") as file:
         markdown_text = file.read()
@@ -136,6 +135,4 @@ def get_collection_details(collection_name: str) -> CountResult:
         ),
         exact=True,
     )
-
-
 
