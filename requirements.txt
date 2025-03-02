@@ -14,3 +14,5 @@ qdrant-client
 ollama
 transformers~=4.48.0
 torch
+rank_bm25
+nltk

@@ -9,10 +9,11 @@ from retrieval.embeddings.embeddings import embed_query
 qdrantClient = QdrantClient(host="localhost", port=6333)
 ollamaClient = ollama.Client("localhost")
 
+
 def create_qdrant_collection(codebase_id: str, embedded_codebase: list[dict[str, int | str | Tensor]]) -> str:
     collection_name = "codebase_" + codebase_id
     qdrantClient.create_collection(
-        collection_name= collection_name,
+        collection_name=collection_name,
         vectors_config=VectorParams(size=len(embedded_codebase[0]["embedding"][0]),
                                     distance=Distance.COSINE)
     )
@@ -32,14 +33,16 @@ def create_qdrant_collection(codebase_id: str, embedded_codebase: list[dict[str,
 
     return collection_name
 
+
 def query_qdrant_collection(collection_name: str, query: str) -> [str]:
     embedded_query = embed_query(query).squeeze(0).tolist()
     search_results = qdrantClient.query_points(
         collection_name=collection_name,
-        vector=[embedded_query],  # Wrap in a list
-        limit=5  # Number of top results to return
+        query=embedded_query,
+        limit=3
     )
 
-    print(search_results)
+    return [point.payload['content'] for point in search_results.points]
 
-query_qdrant_collection("codebase_8b22027e-d4b6-47f4-b23c-0a750944b03d", "Which files are ignored?")
+
+print(query_qdrant_collection("codebase_8b22027e-d4b6-47f4-b23c-0a750944b03d", "?"))

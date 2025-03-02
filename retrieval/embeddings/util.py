@@ -1,7 +1,8 @@
-from retrieval.embeddings.chunking import flatten_codebase, chunk_file
+from retrieval.chunking import flatten_codebase, chunk_file
 from retrieval.embeddings.qdrant import create_qdrant_collection
-from retrieval.embeddings.embeddings import embed_chunk, embed_chunked_codebase
-from retrieval.embeddings.pg_comm import get_codebase
+from retrieval.embeddings.embeddings import embed_chunked_codebase
+from retrieval.pg_comm import get_codebase
+from retrieval.util import get_chunked_codebase
 
 
 def create_qdrant_collection_of_codebase(codebase_id: str) -> str:
@@ -15,12 +16,6 @@ def create_qdrant_collection_of_codebase(codebase_id: str) -> str:
         str: name of the qdrant collection
     """
 
-    codebase = get_codebase(codebase_id)
-    flattened = flatten_codebase(codebase)
-    chunked_codebase = []
-
-    for key in flattened:
-        chunked_codebase.append(chunk_file(key, flattened[key]))
-
+    chunked_codebase = get_chunked_codebase(codebase_id)
     embedded_codebase = embed_chunked_codebase(chunked_codebase)
     return create_qdrant_collection(codebase_id, embedded_codebase)
