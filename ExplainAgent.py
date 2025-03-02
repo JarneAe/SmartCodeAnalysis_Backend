@@ -35,9 +35,7 @@ business_explanation_agent = Agent(
 
 @business_explanation_agent.system_prompt
 def add_business_context(run_context) -> str:
-    business_context = "\n\n".join([f"- {item['text']}" for item in run_context.deps])
-    logfire.info(f"Business Context: {business_context}")
-
+    business_context = run_context.deps
     return (
         "You are a business analyst specializing in translating technical implementations into real-world business value. "
         "Your task is to explain what the provided code accomplishes in terms of business operations, without using technical jargon.\n\n"
@@ -87,7 +85,8 @@ async def explain_business(request: CodeRequest):
             format_code(request.code_snippet)
         )
         # Get business context from embeddings
-        business_context = search_similar_text_qdrant(formatted_code)
+        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(formatted_code)])
+        logfire.info(f"Business Context: {business_context}")
 
         return asyncio.run(
             business_explanation_agent.run(
