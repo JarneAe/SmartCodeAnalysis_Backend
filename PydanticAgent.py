@@ -7,6 +7,7 @@ from pydantic_ai.models.openai import OpenAIModel
 import logfire
 
 from FormatCodeAgent import format_code
+from Qdrant import search_similar_text_qdrant
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
 
@@ -15,8 +16,8 @@ OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
-pdf_convertor = PDFConvertor(file_path="files/improved_case.pdf")
-business_context = pdf_convertor.convert()
+#pdf_convertor = PDFConvertor(file_path="files/improved_case.pdf")
+#business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
@@ -32,7 +33,9 @@ business_explanation_agent = Agent(
 )
 
 @business_explanation_agent.system_prompt
-def add_business_context() -> str:
+def add_business_context(run_context) -> str:
+    business_context = run_context.deps
+    print(f"Business Context: {business_context}")
     return (
         "You are a business analyst specializing in translating technical implementations into real-world business value. "
         "Your task is to explain what the provided code accomplishes in terms of business operations, without using technical jargon.\n\n"
@@ -80,14 +83,21 @@ class CodeRequest(BaseModel):
 
 
 async def explain_business(request: CodeRequest):
+    # This ensures the thread gets a new event loop.
     def run_agent():
-        # This ensures the thread gets a new event loop.
+        # Format given code snippet
         formatted_code = asyncio.run(
             format_code(request.code_snippet)
         )
+        # Get business context from embeddings
+        business_context = search_similar_text_qdrant(formatted_code)
+
+        logfire.info(f"Business Context: {business_context}")
+
         return asyncio.run(
             business_explanation_agent.run(
                 formatted_code,
+                deps=business_context,
                 message_history=message_history
             )
         )
