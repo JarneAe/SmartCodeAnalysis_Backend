@@ -8,6 +8,7 @@ import logfire
 
 from FormatCodeAgent import format_code
 from Models.CodeRequest import CodeRequest
+from Models.ExplainAgentDependencies import ExplainAgentDependencies
 from Qdrant import search_similar_text_qdrant
 from PDFConvertor import PDFConvertor
 from Models.ResponseTemplate import ResponseTemplate
@@ -17,8 +18,6 @@ OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
-#pdf_convertor = PDFConvertor(file_path="files/improved_case.pdf")
-#business_context = pdf_convertor.convert()
 
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
@@ -28,78 +27,81 @@ ollama_model = OpenAIModel(
 
 business_explanation_agent = Agent(
     ollama_model,
-    deps_type=str,
+    deps_type=ExplainAgentDependencies,  # Now using the Pydantic model
     result_type=ResponseTemplate,
     retries=10
 )
 
+
 @business_explanation_agent.system_prompt
 def add_business_context(run_context) -> str:
-    business_context = run_context.deps
-    return (
-        "You are a business analyst specializing in translating technical implementations into real-world business value. "
-        "Your task is to explain what the provided code accomplishes in terms of business operations, without using technical jargon.\n\n"
-        "### Primary Task:\n"
-        "Analyze the provided code and explain its purpose in the context of real-world business operations. Focus on:\n"
-        "- What business process the code supports\n"
-        "- How it improves operations\n"
-        "- Who benefits and how\n"
-        "- Why this process matters to the business\n\n"
-        "### Business Context:\n"
-        f"{business_context}\n\n"
-        "### Response Structure:\n"
-        "1. **Practical use case:** Describe the specific business scenario where this code is used\n"
-        "2. **Business impact:** Explain how this affects operational efficiency, costs, or revenue\n"
-        "3. **User impact:** Describe how this affects the daily work of employees or customers\n"
-        "4. **Why is this important:** Explain the strategic value to the business\n"
-        "5. **Day in the life scenario:** Provide a concrete example of how this is used in daily operations\n\n"
-        "### Critical Constraints:\n"
-        "Focus exclusively on:\n"
-        "- Real-world business processes\n"
-        "- Operational workflows\n"
-        "- User experiences\n"
-        "- Organizational outcomes\n\n"
-        "Absolute Prohibitions:\n"
-        "× Technical terms (APIs, repositories, methods)\n"
-        "× Code structure discussions\n"
-        "× System architecture details\n"
-        "× Implementation quality assessments\n\n"
-        "### Success Criteria:\n"
-        "A perfect response:\n"
-        "- Clearly connects the code to a specific business process\n"
-        "- Explains the value in terms of business outcomes\n"
-        "- Uses relatable examples from physical operations\n"
-        "- Could be understood by a non-technical manager\n"
-        "- Focuses on 'what' the code enables, not 'how' it works\n\n"
-        "Ensure that each explanation ties directly to the given code snippet, linking it to the business process it supports, the operational improvements it provides, and its impact on stakeholders."
-    )
+    deps = run_context.deps
+    return f"""
+You are a business analyst translating technical implementations into business value. Your task is to explain how the provided code creates value in the context of a {deps.user_role}'s responsibilities and workflows.
+
+### Key Requirements:
+1. **Role Context**: Frame the explanation through the lens of a {deps.user_role}'s daily operations and priorities
+2. **Relevance**: Highlight aspects most impactful to their specific business goals and challenges
+3. **Practicality**: Use examples from common scenarios they encounter
+4. **Value Focus**: Show how this enables better outcomes in their area of responsibility
+
+### Prohibited Elements:
+× Technical jargon (APIs, frameworks, etc.)
+× Code implementation details
+× Developer-specific terminology
+× Architecture discussions
+
+### Structural Guidance:
+1. **Process Impact**: How does this code improve workflows the {deps.user_role} manages?
+2. **Outcome Alignment**: What business goals does this help the {deps.user_role} achieve?
+3. **Stakeholder Value**: Which other roles benefit from this functionality and how?
+4. **Strategic Fit**: How does this contribute to the organization's core objectives?
+
+### Business Context:
+{deps.business_context}
+
+### Success Criteria:
+- Direct ties to the {deps.user_role}'s key performance indicators (KPIs)
+- Clear examples of application in their daily work environment
+- Explanation of how this creates measurable business impact
+- Language a non-technical manager would naturally understand
+- No technical implementation details whatsoever
+
+### Example Framing (DO NOT USE PHRASES LIKE "YOU" OR "YOUR"):
+"For a {deps.user_role}, this functionality streamlines... by automating..., allowing more focus on..."
+"""
+
+
 
 message_history = []
 
 
 async def explain_business(request: CodeRequest):
-    # This ensures the thread gets a new event loop.
     def run_agent():
-        # Format given code snippet
         formatted_code = asyncio.run(
             format_code(request.code_snippet)
         )
-        # Get business context from embeddings
-        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(formatted_code)])
-        logfire.info(f"Business Context: {business_context}")
 
-        return asyncio.run(
+        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(formatted_code)])
+
+        dependencies = ExplainAgentDependencies(
+            business_context=business_context,
+            user_role=request.user_role
+        )
+
+        print(f"user_role: {request.user_role}")
+        print(f"business_context: {business_context}")
+
+        result = asyncio.run(
             business_explanation_agent.run(
                 formatted_code,
-                deps=business_context,
+                deps=dependencies,
                 message_history=message_history
             )
         )
+        return result
 
     result = await asyncio.to_thread(run_agent)
     message_history.extend(result.new_messages())
     logfire.info(f"Result: {result.data}")
     return {"explanation": result.data}
-
-
-#asyncio.run(explain_business(request=CodeRequest(code_snippet="public Long getWarehouseIdByLicensePlate(String licensePlate) { try { Pair<Long, String> data = appointmentRetrievalService.getClientIdAndMineralByLicensePlate(licensePlate);\n if (data == null) {\n throw new NoSuchElementException(\"No data found for license plate: \" + licensePlate);\n }\n\n Long sellerId = data.getFirst();\n String mineralName = data.getSecond();\n log.info(\"Fetching Warehouse id for seller with id {} and mineral {}\", sellerId, mineralName);\n\n String url = String.format(warehouseApiUrl, sellerId, mineralName);\n\n ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);\n\n if (response.getStatusCode().is2xxSuccessful()) {\n Long warehouseId = response.getBody();\n log.info(\"Warehouse id retrieved: {}\", warehouseId);\n return warehouseId;\n } else {\n log.error(\"Failed to retrieve warehouse id. Status code: {}\", response.getStatusCode());\n throw new CouldNotRetrieveWarehouseException(\"Failed to retrieve warehouse id. Status code: \" + response.getStatusCode());\n }\n } catch (NoSuchElementException e) {\n log.error(\"Error retrieving warehouse id for license plate: {}\", licensePlate, e);\n throw new CouldNotRetrieveWarehouseException(\"Error retrieving warehouse id for license plate: \" + licensePlate, e);\n }\n}")))

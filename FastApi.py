@@ -22,22 +22,20 @@ app = FastAPI(
     "/analyze-code",
     summary="Analyze a code snippet and explain it using business context",
     tags=["Code Analysis"],
-    response_model=Dict[str, Any],  # Adjust this to match actual return structure
+    response_model=Dict[str, Any],
 )
 async def analyze_code(request: CodeRequest):
     """
     Analyzes a given code snippet and provides a business explanation.
 
     Parameters:
-    - request (CodeRequest): Contains the code snippet to be analyzed.
+    - **request**: Contains the code snippet and user role.
 
     Returns:
     - JSON response containing the explanation.
     """
     try:
         return await explain_business(request)
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=f"Invalid input: {ve}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error analyzing the code: {str(e)}")
 
@@ -70,7 +68,7 @@ def search_similar_text(
     - JSON response containing similar text results.
     """
     try:
-        return search_similar_text_qdrant(query_text)  # This already returns a list
+        return search_similar_text_qdrant(query_text)
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=f"Invalid search query: {str(ve)}")
     except Exception as e:
