@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
 
 from ExplainAgent import explain_business, CodeRequest
-from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant
+from Models.ContextRequest import ContextRequest
+from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
 
@@ -49,14 +50,23 @@ def instantiate_qdrant():
     - JSON response indicating success or failure.
     """
     try:
-        return instantiate_qdrant_and_fill_collection()
+        return {"message": instantiate_qdrant_and_fill_collection()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error initializing Qdrant: {str(e)}")
 
 
+@app.post("/qdrant/add_collection", tags=["Qdrant"], response_model=Dict[str, Any])
+def add_qdrant_collection(request: ContextRequest):
+    try:
+        return {"message": add_collection(request.collection_name, request.context_files)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error adding collection to Qdrant: {str(e)}")
+
+
 @app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=List[Dict[str, Any]])
 def search_similar_text(
-    query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant")
+    query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant"),
+    collection_name: str = Query("TestCollection", description="The name of the collection to search in"),
 ):
     """
     Searches for similar text embeddings in Qdrant.
@@ -68,7 +78,7 @@ def search_similar_text(
     - JSON response containing similar text results.
     """
     try:
-        return search_similar_text_qdrant(query_text)
+        return search_similar_text_qdrant(query_text, collection_name=collection_name)
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=f"Invalid search query: {str(ve)}")
     except Exception as e:

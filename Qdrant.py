@@ -1,10 +1,14 @@
 import os
+from typing import List, Dict
+
 import ollama
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import models
 import nltk
 from nltk.tokenize import sent_tokenize
 from qdrant_client.http.models import models, CountResult
+
+from Models.ContextRequest import ContextFile
 
 # Download necessary NLTK data
 nltk.download('punkt')
@@ -47,20 +51,23 @@ def get_embeddings(text):
     return response["embedding"]
 
 
-def upsert_embeddings(texts, file_name):
+def upsert_embeddings(texts, file_name, collection_name):
     embeddings_list = [get_embeddings(text) for text in texts]
 
-    if not qclient.collection_exists(COLLECTION_NAME):
+    if not qclient.collection_exists(collection_name):
         qclient.create_collection(
-            collection_name=COLLECTION_NAME,
+            collection_name=collection_name,
             vectors_config=models.VectorParams(
                 size=len(embeddings_list[0]), distance=models.Distance.COSINE
             ),
         )
 
+    # Get size of collection to determine the next ID to prevent overwriting existing points
+    last_id = qclient.get_collection(collection_name).points_count or 0
+
     points = [
         models.PointStruct(
-            id=i + 1,
+            id=i + 1 + last_id,
             vector=embeddings,
             payload={
                 "text": text,
@@ -72,17 +79,17 @@ def upsert_embeddings(texts, file_name):
         for i, (text, embeddings) in enumerate(zip(texts, embeddings_list))
     ]
 
-    qclient.upsert(collection_name=COLLECTION_NAME, points=points)
+    qclient.upsert(collection_name=collection_name, points=points)
 
 
-def search_similar_text_qdrant(query_text, top_k=5):
+def search_similar_text_qdrant(query_text, collection_name, top_k=5):
     """
     Embed the input text and return the top_k most similar results from Qdrant.
     """
     query_embedding = get_embeddings(query_text)
 
     search_results = qclient.search(
-        collection_name=COLLECTION_NAME,
+        collection_name=collection_name,
         query_vector=query_embedding,
         limit=top_k,
     )
@@ -109,9 +116,17 @@ def instantiate_qdrant_and_fill_collection():
         markdown_text = file.read()
 
     chunks = chunk_markdown_by_sentences(markdown_text, max_chars=300)
-    upsert_embeddings(chunks, file_name=os.path.basename(markdown_file))
+    upsert_embeddings(chunks, file_name=os.path.basename(markdown_file), collection_name=COLLECTION_NAME)
 
     return "Qdrant collection filled successfully."
+
+
+def add_collection(collection_name: str, context_files: List[ContextFile]):
+    for file in context_files:
+        context_chunks = chunk_markdown_by_sentences(file.content, max_chars=300)
+        upsert_embeddings(context_chunks, file_name=file.name, collection_name=collection_name)
+
+    return f"Collection {collection_name} added successfully"
 
 
 def get_collection_details(collection_name: str) -> CountResult:
