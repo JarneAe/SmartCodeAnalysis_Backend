@@ -72,7 +72,6 @@ You are a business analyst translating technical implementations into business v
 """
 
 
-
 message_history = []
 
 
@@ -82,7 +81,8 @@ async def explain_business(request: CodeRequest):
             format_code(request.code_snippet)
         )
 
-        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(formatted_code)])
+        business_context = "\n\n".join([f"- {item['text']}" for item in
+                                        search_similar_text_qdrant(formatted_code, request.collection_name)])
 
         dependencies = ExplainAgentDependencies(
             business_context=business_context,

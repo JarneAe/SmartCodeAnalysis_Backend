@@ -8,3 +8,4 @@ class CodeRequest(BaseModel):
         """
     )
     user_role: str = Field(default="Sales Manager")
+    collection_name: str = Field(default="TestCollection")
