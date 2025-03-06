@@ -1,7 +1,5 @@
-from retrieval.chunking import flatten_codebase, chunk_file
 from retrieval.embeddings.qdrant import create_qdrant_collection
 from retrieval.embeddings.embeddings import embed_chunked_codebase
-from retrieval.pg_comm import get_codebase
 from retrieval.util import get_chunked_codebase
 
 
