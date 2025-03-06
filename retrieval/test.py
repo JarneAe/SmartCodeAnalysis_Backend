@@ -1,8 +1,4 @@
-from retrieval.util import get_chunked_codebase
+from retrieval import retrieve
 
-cb = get_chunked_codebase("8ab6b048-c99d-4c78-8955-1ef98fdb4f74")
-print(cb)
-
-content = [chunk['text'] for file in cb for chunk in file]
-
-print(content)
+docs = retrieve("7b910a73-7a93-4744-b827-9dc7e0150202", "How are ships added?", 3)
+print(docs)

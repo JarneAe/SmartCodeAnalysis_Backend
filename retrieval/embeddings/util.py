@@ -1,4 +1,4 @@
-from retrieval.embeddings.qdrant import create_qdrant_collection
+from retrieval.embeddings.qdrant import create_qdrant_collection, codebase_has_collection
 from retrieval.embeddings.embeddings import embed_chunked_codebase
 from retrieval.util import get_chunked_codebase
 
@@ -14,6 +14,9 @@ def create_qdrant_collection_of_codebase(codebase_id: str) -> str:
         str: name of the qdrant collection
     """
 
-    chunked_codebase = get_chunked_codebase(codebase_id)
-    embedded_codebase = embed_chunked_codebase(chunked_codebase)
-    return create_qdrant_collection(codebase_id, embedded_codebase)
+    if not codebase_has_collection(codebase_id):
+        chunked_codebase = get_chunked_codebase(codebase_id)
+        embedded_codebase = embed_chunked_codebase(chunked_codebase)
+        return create_qdrant_collection(codebase_id, embedded_codebase)
+    else:
+        return "codebase_" + codebase_id

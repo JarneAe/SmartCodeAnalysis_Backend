@@ -24,4 +24,4 @@ def get_scores_of_chunks(chunks: list[str], query: str) -> list[float]:
 
     query_tokens = word_tokenize(query)
 
-    return bm25.get_scores(query_tokens)
+    return bm25.get_scores(query_tokens).tolist()

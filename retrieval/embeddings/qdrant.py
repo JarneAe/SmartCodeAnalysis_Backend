@@ -1,4 +1,5 @@
 from qdrant_client import QdrantClient
+from qdrant_client.http.exceptions import UnexpectedResponse
 from qdrant_client.models import VectorParams, Distance
 import ollama
 from qdrant_client.models import PointStruct
@@ -34,15 +35,22 @@ def create_qdrant_collection(codebase_id: str, embedded_codebase: list[dict[str,
     return collection_name
 
 
-def query_qdrant_collection(collection_name: str, query: str) -> [str]:
+def query_qdrant_collection(collection_name: str, query: str, n: int = 3) -> [str]:
     embedded_query = embed_query(query).squeeze(0).tolist()
     search_results = qdrantClient.query_points(
         collection_name=collection_name,
         query=embedded_query,
-        limit=3
+        limit=n
     )
 
     return [point.payload['content'] for point in search_results.points]
 
-
-print(query_qdrant_collection("codebase_8b22027e-d4b6-47f4-b23c-0a750944b03d", "?"))
+def codebase_has_collection(codebase_id: str) -> bool:
+    try:
+        qdrantClient.get_collection("codebase_"+codebase_id)
+        return True
+    except UnexpectedResponse as e:
+        if "404" in str(e):
+            return False
+        else:
+            raise
