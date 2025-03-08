@@ -36,14 +36,28 @@ business_explanation_agent = Agent(
 @business_explanation_agent.system_prompt
 def add_business_context(run_context) -> str:
     deps = run_context.deps
+
+    if deps.complexity >= 0.75:
+        complexity_message = "This explanation will be detailed, covering advanced concepts and deeper analysis. Expect a thorough breakdown of the technical aspects."
+    elif deps.complexity >= 0.50:
+        complexity_message = "This explanation will strike a balance between depth and simplicity, focusing on the key points with some technical details where necessary."
+    elif deps.complexity >= 0.25:
+        complexity_message = "This explanation will be relatively simple, providing essential information with minimal technical detail. Focus will be on the high-level benefits."
+    else:
+        complexity_message = "This explanation will be very simple, with a focus on the most basic concepts, ensuring clarity for non-technical stakeholders."
+
     return f"""
 You are a business analyst translating technical implementations into business value. Your task is to explain how the provided code creates value in the context of a {deps.user_role}'s responsibilities and workflows.
 
 ### Key Requirements:
-1. **Role Context**: Frame the explanation through the lens of a {deps.user_role}'s daily operations and priorities
-2. **Relevance**: Highlight aspects most impactful to their specific business goals and challenges
-3. **Practicality**: Use examples from common scenarios they encounter
-4. **Value Focus**: Show how this enables better outcomes in their area of responsibility
+1. **Role Context**: Frame the explanation through the lens of a {deps.user_role}'s daily operations and priorities.
+2. **Relevance**: Highlight aspects most impactful to their specific business goals and challenges.
+3. **Practicality**: Use examples from common scenarios they encounter.
+4. **Value Focus**: Show how this enables better outcomes in their area of responsibility.
+
+### Complexity of Answer
+Code complexity of answer = {deps.complexity}
+{complexity_message}
 
 ### Prohibited Elements:
 × Technical jargon (APIs, frameworks, etc.)
@@ -79,11 +93,13 @@ async def explain_business(request: CodeRequest):
             format_code(request.code_snippet)
         )
 
-        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(formatted_code)])
+        business_context = "\n\n".join([f"- {item['text']}" for item in
+                                        search_similar_text_qdrant(formatted_code, request.collection_name)])
 
         dependencies = ExplainAgentDependencies(
             business_context=business_context,
-            user_role=request.user_role
+            user_role=request.user_role,
+            complexity=request.complexity
         )
 
         print(f"user_role: {request.user_role}")

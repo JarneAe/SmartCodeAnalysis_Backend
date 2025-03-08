@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, condecimal
 
 
 class CodeRequest(BaseModel):
@@ -9,3 +9,4 @@ class CodeRequest(BaseModel):
     )
     user_role: str = Field(default="Sales Manager")
     collection_name: str = Field(default="TestCollection")
+    complexity: condecimal(ge=0, le=1)
