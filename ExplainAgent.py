@@ -27,7 +27,7 @@ ollama_model = OpenAIModel(
 
 business_explanation_agent = Agent(
     ollama_model,
-    deps_type=ExplainAgentDependencies,  # Now using the Pydantic model
+    deps_type=ExplainAgentDependencies,
     result_type=ResponseTemplate,
     retries=10
 )
@@ -73,9 +73,6 @@ You are a business analyst translating technical implementations into business v
 
 
 
-message_history = []
-
-
 async def explain_business(request: CodeRequest):
     def run_agent():
         formatted_code = asyncio.run(
@@ -95,13 +92,11 @@ async def explain_business(request: CodeRequest):
         result = asyncio.run(
             business_explanation_agent.run(
                 formatted_code,
-                deps=dependencies,
-                message_history=message_history
+                deps=dependencies
             )
         )
         return result
 
     result = await asyncio.to_thread(run_agent)
-    message_history.extend(result.new_messages())
     logfire.info(f"Result: {result.data}")
     return {"explanation": result.data}

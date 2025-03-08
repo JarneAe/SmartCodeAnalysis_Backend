@@ -5,6 +5,8 @@ from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_q
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
 
+from chatbot_methods import ask_question
+
 app = FastAPI(
     title="Smart Code Analysis",
     description="API to interact with the RAG Business Explanation Agent for code snippets.",
@@ -38,6 +40,28 @@ async def analyze_code(request: CodeRequest):
         return await explain_business(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error analyzing the code: {str(e)}")
+
+
+@app.post(
+    "/chat",
+    summary="Analyze a code snippet and explain it using business context",
+    tags=["Chat"],
+    response_model=Dict[str, Any],
+)
+async def analyze_code(question: str):
+    """
+    Analyzes a given code snippet and provides a business explanation.
+
+    Parameters:
+    - **request**: Contains the code snippet and user role.
+
+    Returns:
+    - JSON response containing the explanation.
+    """
+    try:
+        return await ask_question(question)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error Responding {str(e)}")
 
 
 @app.post("/qdrant/instantiate", tags=["Qdrant"], response_model=Dict[str, Any])
@@ -74,6 +98,26 @@ def search_similar_text(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")
 
+
+@app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=List[Dict[str, Any]])
+def search_similar_text(
+    query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant")
+):
+    """
+    Searches for similar text embeddings in Qdrant.
+
+    Parameters:
+    - query_text (str): The text query for similarity search.
+
+    Returns:
+    - JSON response containing similar text results.
+    """
+    try:
+        return search_similar_text_qdrant(query_text)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=f"Invalid search query: {str(ve)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")
 
 @app.get("/", include_in_schema=False)
 def docs_redirect():
