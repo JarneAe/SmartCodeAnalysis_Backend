@@ -44,7 +44,10 @@ def get_root_folder_of_codebase(codebase_id: str) -> str:
                 SELECT "RootFolderId" FROM "Codebases" WHERE "Codebases"."Id" = %s
                 """, (codebase_id,))
 
-            return cur.fetchone()[0]
+            try:
+                return cur.fetchone()[0]
+            except TypeError:
+                raise ValueError(f"codebase {codebase_id} not found")
 
 
 def get_children_of_folder(folder_id: str) -> {}:
