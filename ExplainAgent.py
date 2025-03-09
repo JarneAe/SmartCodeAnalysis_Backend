@@ -1,20 +1,17 @@
 import asyncio
 import os
-
+import logfire
 from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
-import logfire
-
-from FormatCodeAgent import format_code
 from Models.CodeRequest import CodeRequest
 from Models.ExplainAgentDependencies import ExplainAgentDependencies
+from Models.ResponseTemplate import ResponseTemplate
 from Qdrant import search_similar_text_qdrant
 from PDFConvertor import PDFConvertor
-from Models.ResponseTemplate import ResponseTemplate
+from FormatCodeAgent import format_code
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
-
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
@@ -22,7 +19,7 @@ logfire.instrument_httpx(capture_all=True)
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
     base_url=OLLAMA_URI + "/v1",
-    api_key='ollama',
+    api_key=os.getenv("OLLAMA_API_KEY", "default_api_key"),
 )
 
 business_explanation_agent = Agent(
@@ -33,30 +30,34 @@ business_explanation_agent = Agent(
 )
 
 
+def get_complexity_message(complexity: float) -> str:
+    """Return a complexity message based on the provided complexity score."""
+    if complexity >= 0.75:
+        return "This explanation will be detailed, covering advanced concepts and deeper analysis."
+    elif complexity >= 0.50:
+        return "This explanation will strike a balance between depth and simplicity."
+    elif complexity >= 0.25:
+        return "This explanation will be relatively simple, providing essential information with minimal technical detail."
+    else:
+        return "This explanation will be very simple, focusing on the most basic concepts."
+
+
 @business_explanation_agent.system_prompt
 def add_business_context(run_context) -> str:
-    deps = run_context.deps
-
-    if deps.complexity >= 0.75:
-        complexity_message = "This explanation will be detailed, covering advanced concepts and deeper analysis. Expect a thorough breakdown of the technical aspects."
-    elif deps.complexity >= 0.50:
-        complexity_message = "This explanation will strike a balance between depth and simplicity, focusing on the key points with some technical details where necessary."
-    elif deps.complexity >= 0.25:
-        complexity_message = "This explanation will be relatively simple, providing essential information with minimal technical detail. Focus will be on the high-level benefits."
-    else:
-        complexity_message = "This explanation will be very simple, with a focus on the most basic concepts, ensuring clarity for non-technical stakeholders."
+    """Construct the business context message based on complexity and role."""
+    complexity_message = get_complexity_message(run_context.deps.complexity)
 
     return f"""
-You are a business analyst translating technical implementations into business value. Your task is to explain how the provided code creates value in the context of a {deps.user_role}'s responsibilities and workflows.
+You are a business analyst translating technical implementations into business value. Your task is to explain how the provided code creates value in the context of a {run_context.deps.user_role}'s responsibilities and workflows.
 
 ### Key Requirements:
-1. **Role Context**: Frame the explanation through the lens of a {deps.user_role}'s daily operations and priorities.
+1. **Role Context**: Frame the explanation through the lens of a {run_context.deps.user_role}'s daily operations and priorities.
 2. **Relevance**: Highlight aspects most impactful to their specific business goals and challenges.
 3. **Practicality**: Use examples from common scenarios they encounter.
 4. **Value Focus**: Show how this enables better outcomes in their area of responsibility.
 
 ### Complexity of Answer
-Code complexity of answer = {deps.complexity}
+Code complexity of answer = {run_context.deps.complexity}
 {complexity_message}
 
 ### Prohibited Elements:
@@ -66,35 +67,36 @@ Code complexity of answer = {deps.complexity}
 × Architecture discussions
 
 ### Structural Guidance:
-1. **Process Impact**: How does this code improve workflows the {deps.user_role} manages?
-2. **Outcome Alignment**: What business goals does this help the {deps.user_role} achieve?
+1. **Process Impact**: How does this code improve workflows the {run_context.deps.user_role} manages?
+2. **Outcome Alignment**: What business goals does this help the {run_context.deps.user_role} achieve?
 3. **Stakeholder Value**: Which other roles benefit from this functionality and how?
 4. **Strategic Fit**: How does this contribute to the organization's core objectives?
 
 ### Business Context:
-{deps.business_context}
+{run_context.deps.business_context}
 
 ### Success Criteria:
-- Direct ties to the {deps.user_role}'s key performance indicators (KPIs)
+- Direct ties to the {run_context.deps.user_role}'s key performance indicators (KPIs)
 - Clear examples of application in their daily work environment
 - Explanation of how this creates measurable business impact
 - Language a non-technical manager would naturally understand
 - No technical implementation details whatsoever
-
-### Example Framing (DO NOT USE PHRASES LIKE "YOU" OR "YOUR"):
-"For a {deps.user_role}, this functionality streamlines... by automating..., allowing more focus on..."
 """
 
 
+async def get_business_context(formatted_code: str, collection_name: str) -> str:
+    """Retrieve the business context by searching for similar code."""
+    similar_texts = search_similar_text_qdrant(formatted_code, collection_name)
+    return "\n\n".join([f"- {item['text']}" for item in similar_texts])
+
 
 async def explain_business(request: CodeRequest):
-    def run_agent():
-        formatted_code = asyncio.run(
-            format_code(request.code_snippet)
-        )
+    """Explain the business value of a code snippet for a given user role."""
 
-        business_context = "\n\n".join([f"- {item['text']}" for item in
-                                        search_similar_text_qdrant(formatted_code, request.collection_name)])
+    try:
+        formatted_code = await format_code(request.code_snippet)
+
+        business_context = await get_business_context(formatted_code, request.collection_name)
 
         dependencies = ExplainAgentDependencies(
             business_context=business_context,
@@ -102,17 +104,15 @@ async def explain_business(request: CodeRequest):
             complexity=request.complexity
         )
 
-        print(f"user_role: {request.user_role}")
-        print(f"business_context: {business_context}")
-
-        result = asyncio.run(
-            business_explanation_agent.run(
-                formatted_code,
-                deps=dependencies
-            )
+        result = await business_explanation_agent.run(
+            formatted_code,
+            deps=dependencies
         )
-        return result
 
-    result = await asyncio.to_thread(run_agent)
-    logfire.info(f"Result: {result.data}")
-    return {"explanation": result.data}
+        logfire.info(f"Explanation result: {result.data}")
+        return {"explanation": result.data}
+
+    except Exception as e:
+        logfire.error(f"Error during business explanation: {str(e)}")
+        return {"error": "An error occurred while processing the request."}
+
