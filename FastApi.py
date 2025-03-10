@@ -5,7 +5,7 @@ from Models.ContextRequest import ContextRequest
 from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
-
+from retrieval import RetrievalRequest, retrieve
 from chatbot_methods import ask_question
 
 app = FastAPI(
@@ -19,6 +19,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+app = FastAPI()
 
 
 @app.post(
@@ -132,3 +134,13 @@ def search_similar_text(
 @app.get("/", include_in_schema=False)
 def docs_redirect():
     return RedirectResponse(url='/docs')
+
+@app.post("/retrieve-code")
+async def retrieve_code(request: RetrievalRequest):
+    try:
+        docs = retrieve(request)
+        return docs
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Codebase not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {e}")
