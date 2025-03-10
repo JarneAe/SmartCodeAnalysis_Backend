@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 from agents.ExplainAgent import explain_business
 from models.CodeRequest import CodeRequest
 from models.ContextRequest import ContextRequest
-from database.Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
+from qdrant.qdrant_methods import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
 import sys

@@ -5,7 +5,7 @@ from pydantic_ai.models.openai import OpenAIModel
 from models.CodeRequest import CodeRequest
 from models.ExplainAgentDependencies import ExplainAgentDependencies
 from models.ResponseTemplate import ResponseTemplate
-from database.Qdrant import search_similar_text_qdrant
+from qdrant.qdrant_methods import search_similar_text_qdrant
 from agents.FormatCodeAgent import format_code
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")

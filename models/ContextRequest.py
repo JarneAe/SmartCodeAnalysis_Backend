@@ -95,7 +95,7 @@ Bedrijven die grondstoffen kopen die bij KdG zijn opgeslagen. Kopers maken recht
 
 ## Enkele concepten in detail:
 
-    Weegbrug: Volautomatisch systeem, dat het kenteken scant, het gewicht van de vrachtwagen en het tijdstip van de weging. Dit systeem is gekoppeld aan een database die alle weeggegevens opslaat.
+    Weegbrug: Volautomatisch systeem, dat het kenteken scant, het gewicht van de vrachtwagen en het tijdstip van de weging. Dit systeem is gekoppeld aan een qdrant die alle weeggegevens opslaat.
     Purchase Order (PO): Een aankooporder bevat een datum, aankoopordernummer, klantnummer, naam en een aantal inkooporderregels. Van elk soort materiaal krijgen we het type materiaal, de hoeveelheid in ton en de afgesproken prijs per ton grondstof. Dit document is essentieel voor de facturatie en de tracking van de goederen.
     Dokoperatie (DO): Bij het arriveren van het schip zal er een dok operatie aangemaakt worden, dit bevat het tijdstip van het arriveren van het schip, het vertrektijdstip en een referentie naar de PO met scheepsnummer en de status omtrent de (IO, BO) zie volgende concepten. Dit is een overzicht van alle activiteiten die plaatsvinden tijdens het verblijf van het schip in de haven.
     Inspectieoperatie: Deze operatie wordt uitgevoerd door de veiligheidsinspecteur. Om de scope te beperken voegen we enkel een datum en het inspectienummer toe aan de DO. Toch willen we het concept van een IO in de code zien. In de praktijk omvat een IO een grondige inspectie van het schip en de lading.
