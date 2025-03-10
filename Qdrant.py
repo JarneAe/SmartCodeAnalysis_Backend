@@ -12,6 +12,7 @@ from Models.ContextRequest import ContextFile
 
 # Download necessary NLTK data
 nltk.download('punkt')
+nltk.download('punkt_tab')
 
 # Constants
 COLLECTION_NAME = "TestCollection"
@@ -109,7 +110,6 @@ def search_similar_text_qdrant(query_text, collection_name, top_k=5):
 
 
 def instantiate_qdrant_and_fill_collection():
-    nltk.download('punkt_tab')
     markdown_file = "markdown_files/improved_case.md"
 
     with open(markdown_file, "r", encoding="utf-8") as file:
