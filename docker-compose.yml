@@ -1,8 +1,10 @@
+version: '3.8'
+
 services:
   web:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: docker/Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -13,12 +15,12 @@ services:
       - OLLAMA_URI=http://ollama:11434
       - QDRANT_URI=http://qdrant:6333
     env_file:
-      - .env
+      - config/.env
 
   ollama:
     build:
-      context: ./ollama
-      dockerfile: Dockerfile
+      context: ./ollama  # Adjusted path
+      dockerfile: Dockerfile  # Corrected reference
     ports:
       - "11434:11434"
     volumes:

@@ -8,14 +8,14 @@ import nltk
 from nltk.tokenize import sent_tokenize
 from qdrant_client.http.models import models, CountResult
 
-from Models.ContextRequest import ContextFile
+from models.ContextRequest import ContextFile
 
 # Download necessary NLTK data
 nltk.download('punkt')
 
 # Constants
 COLLECTION_NAME = "TestCollection"
-SAVE_DIR = "markdown_files"
+SAVE_DIR = "../markdown_files"
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 oclient = ollama.Client(OLLAMA_URI)
@@ -110,7 +110,7 @@ def search_similar_text_qdrant(query_text, collection_name, top_k=5):
 
 def instantiate_qdrant_and_fill_collection():
     nltk.download('punkt_tab')
-    markdown_file = "markdown_files/improved_case.md"
+    markdown_file = "../markdown_files/improved_case.md"
 
     with open(markdown_file, "r", encoding="utf-8") as file:
         markdown_text = file.read()

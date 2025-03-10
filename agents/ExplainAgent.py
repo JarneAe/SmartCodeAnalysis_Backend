@@ -1,15 +1,12 @@
-import asyncio
 import os
 import logfire
-from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
-from Models.CodeRequest import CodeRequest
-from Models.ExplainAgentDependencies import ExplainAgentDependencies
-from Models.ResponseTemplate import ResponseTemplate
-from Qdrant import search_similar_text_qdrant
-from PDFConvertor import PDFConvertor
-from FormatCodeAgent import format_code
+from models.CodeRequest import CodeRequest
+from models.ExplainAgentDependencies import ExplainAgentDependencies
+from models.ResponseTemplate import ResponseTemplate
+from database.Qdrant import search_similar_text_qdrant
+from agents.FormatCodeAgent import format_code
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
@@ -57,7 +54,7 @@ You are a business analyst translating technical implementations into business v
 4. **Value Focus**: Show how this enables better outcomes in their area of responsibility.
 
 ### Complexity of Answer
-Code complexity of answer = {run_context.deps.complexity}
+Code complexity of answer = {run_context.deps.complexity} take this number as a percent into account. 
 {complexity_message}
 
 ### Prohibited Elements:

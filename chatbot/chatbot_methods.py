@@ -4,8 +4,8 @@ import logfire
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 
-from Models.ChatDependencies import ChatDependencies
-from Qdrant import search_similar_text_qdrant
+from models.ChatDependencies import ChatDependencies
+from database.Qdrant import search_similar_text_qdrant
 
 OLLAMA_URI = "http://localhost:11434"
 

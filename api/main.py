@@ -1,12 +1,17 @@
 from fastapi import FastAPI, HTTPException, Query
-
-from ExplainAgent import explain_business, CodeRequest
-from Models.ContextRequest import ContextRequest
-from Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
+from agents.ExplainAgent import explain_business
+from models.CodeRequest import CodeRequest
+from models.ContextRequest import ContextRequest
+from database.Qdrant import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
+import sys
+import os
+from chatbot.chatbot_methods import ask_question
 
-from chatbot_methods import ask_question
+
+
+
 
 app = FastAPI(
     title="Smart Code Analysis",
@@ -19,6 +24,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
 
 
 @app.post(
