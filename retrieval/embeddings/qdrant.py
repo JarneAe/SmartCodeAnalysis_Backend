@@ -1,3 +1,5 @@
+import os
+
 from qdrant_client import QdrantClient
 from qdrant_client.http.exceptions import UnexpectedResponse
 from qdrant_client.models import VectorParams, Distance
@@ -7,8 +9,11 @@ from torch import Tensor
 
 from retrieval.embeddings.embeddings import embed_query
 
-qdrantClient = QdrantClient(host="localhost", port=6333)
-ollamaClient = ollama.Client("localhost")
+ollama_uri = os.getenv("OLLAMA_URI")
+qdrant_uri = os.getenv("QDRANT_URI")
+
+qdrantClient = QdrantClient(qdrant_uri)
+ollamaClient = ollama.Client(ollama_uri)
 
 
 def create_qdrant_collection(codebase_id: str, embedded_codebase: list[dict[str, int | str | Tensor]]) -> str:
