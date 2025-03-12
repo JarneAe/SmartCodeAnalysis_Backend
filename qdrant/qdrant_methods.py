@@ -14,7 +14,7 @@ nltk.download('punkt')
 
 # Constants for configuration
 COLLECTION_NAME = "TestCollection"
-SAVE_DIR = "../markdown_files"
+SAVE_DIR = '../markdown_files/improved_case.md'
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 QDRANT_URI = os.getenv("QDRANT_URI", "http://localhost:6333")
 MAX_CHARS = 500
@@ -150,7 +150,7 @@ def instantiate_qdrant_and_fill_collection() -> str:
     Returns:
         str: A success message.
     """
-    markdown_file = "../markdown_files/improved_case.md"
+    markdown_file = '../markdown_files/improved_case.md'
 
     with open(markdown_file, "r", encoding="utf-8") as file:
         markdown_text = file.read()
