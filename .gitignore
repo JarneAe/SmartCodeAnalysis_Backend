@@ -176,3 +176,4 @@ cython_debug/
 # Project specific
 rag_tests/data
 rag_tests/db
+qdrant_data
