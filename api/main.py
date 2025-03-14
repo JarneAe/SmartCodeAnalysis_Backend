@@ -1,5 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
+
+from agents.AnnotateAgent import annotate_code
 from agents.ExplainAgent import explain_business
+from models.AnnotateResponse import Annotation
 from models.ChatRequest import ChatRequest
 from models.CodeRequest import CodeRequest
 from models.ContextRequest import ContextRequest
@@ -33,7 +36,7 @@ async def analyze_code(request: CodeRequest):
     Analyzes a given code snippet and provides a business explanation.
 
     Parameters:
-    - **request**: Contains the code snippet and user role.
+    - **request**: Contains the code snippet, user role and complexity.
 
     Returns:
     - JSON response containing the explanation.
@@ -43,6 +46,26 @@ async def analyze_code(request: CodeRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error analyzing the code: {str(e)}")
 
+@app.post(
+    "/analyze-code/annotate",
+    summary="Annotate a code snippet with business context",
+    tags=["Code Analysis"],
+    response_model=List[Annotation]
+)
+async def analyze_annotate_code(request: CodeRequest):
+    """
+    Annotates a given code snippet with business context.
+
+    Parameters:
+    - **request**: Contains the code snippet, user role and complexity.
+
+    Returns:
+    - JSON response containing the annotations.
+    """
+    try:
+        return await annotate_code(request)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error annotating the code: {str(e)}")
 
 @app.post(
     "/chat",
@@ -109,26 +132,6 @@ def search_similar_text(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")
 
-
-@app.get("/qdrant/search_similar", tags=["Qdrant"], response_model=List[Dict[str, Any]])
-def search_similar_text(
-    query_text: str = Query(..., min_length=3, description="The text to search for similar embeddings in Qdrant")
-):
-    """
-    Searches for similar text embeddings in Qdrant.
-
-    Parameters:
-    - query_text (str): The text query for similarity search.
-
-    Returns:
-    - JSON response containing similar text results.
-    """
-    try:
-        return search_similar_text_qdrant(query_text)
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=f"Invalid search query: {str(ve)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error performing search: {str(e)}")
 
 @app.get("/", include_in_schema=False)
 def docs_redirect():
