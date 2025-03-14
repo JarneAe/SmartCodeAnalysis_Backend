@@ -1,17 +1,12 @@
 from fastapi import FastAPI, HTTPException, Query
 from agents.ExplainAgent import explain_business
+from models.ChatRequest import ChatRequest
 from models.CodeRequest import CodeRequest
 from models.ContextRequest import ContextRequest
 from qdrant.qdrant_methods import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
 from fastapi.responses import RedirectResponse
-import sys
-import os
 from chatbot.chatbot_methods import ask_question
-
-
-
-
 
 app = FastAPI(
     title="Smart Code Analysis",
@@ -55,7 +50,7 @@ async def analyze_code(request: CodeRequest):
     tags=["Chat"],
     response_model=Dict[str, Any],
 )
-async def analyze_code(question: str):
+async def analyze_code(request: ChatRequest):
     """
     Analyzes a given code snippet and provides a business explanation.
 
@@ -66,7 +61,7 @@ async def analyze_code(question: str):
     - JSON response containing the explanation.
     """
     try:
-        return await ask_question(question)
+        return await ask_question(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error Responding {str(e)}")
 

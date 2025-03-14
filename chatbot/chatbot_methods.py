@@ -1,14 +1,12 @@
-import asyncio
-
+import os
 import logfire
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
-
 from models.ChatDependencies import ChatDependencies
+from models.ChatRequest import ChatRequest
 from qdrant.qdrant_methods import search_similar_text_qdrant
 
-OLLAMA_URI = "http://localhost:11434"
-
+OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
 logfire.instrument_httpx(capture_all=True)
 
@@ -16,7 +14,7 @@ logfire.instrument_httpx(capture_all=True)
 ollama_model = OpenAIModel(
     model_name='qwen2.5:7b',
     base_url=OLLAMA_URI + "/v1",
-    api_key='ollama',
+    api_key=os.getenv("OLLAMA_API_KEY", "default_api_key"),
 )
 
 question_agent = Agent(
@@ -28,32 +26,40 @@ def system_prompt(run_context) -> str:
     deps = run_context.deps
 
     return f"""
-    You are a business expert. Use the following context to provide clear explanations:
-    - Relevant information: {deps.business_context}
+    You are an expert in business strategy, operations, and decision-making.  
+    Your goal is to provide **clear, concise, and actionable explanations** using the relevant context below:
+
+    **Relevant Business Context:**
+    {deps.business_context if deps.business_context else "No specific context available. Provide a general but insightful response."}
+
+    ### **Instructions:**
+    - Keep responses **brief yet comprehensive** (ideally under 200 words).
+    - Use **concrete examples** and **specific details** where possible.
+    - **Avoid vague statements**—ensure explanations are direct and useful.
+    - If additional information is needed, state what’s missing.
     """
 
+async def get_business_context(chat_message: str, collection_name: str) -> str:
+    business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(query_text=chat_message, collection_name=collection_name)])
+    return business_context
 
 
-async def ask_question(question):
+async def ask_question(request: ChatRequest):
 
-    def run_agent():
-
-        business_context = "\n\n".join([f"- {item['text']}" for item in search_similar_text_qdrant(question)])
+    try:
+        business_context = await get_business_context(request.chat_message, request.collection_name)
 
         dependencies = ChatDependencies(
             business_context=business_context,
         )
 
-        result = asyncio.run(
-            question_agent.run(
-                question,
-                deps=dependencies,
-            )
+        result = await question_agent.run(
+            request.chat_message,
+            deps=dependencies,
         )
 
-        return result
+        return {"explanation": result.data}
 
-
-    result = await asyncio.to_thread(run_agent)
-
-    return {"explanation": result.data}
+    except Exception as e:
+        logfire.error(f"Error during business explanation: {str(e)}")
+        return {"error": "An error occurred while processing the request."}
