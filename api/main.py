@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException, Query
 from agents.ExplainAgent import explain_business
+from agents.TestGenerationAgent import generate_tests_agent
 from models.ChatRequest import ChatRequest
 from models.CodeRequest import CodeRequest
+from models.CodeTestGenerationRequest import CodeTestGenerationRequest
 from models.ContextRequest import ContextRequest
 from qdrant.qdrant_methods import instantiate_qdrant_and_fill_collection, search_similar_text_qdrant, add_collection
 from typing import Dict, Any, List
@@ -44,9 +46,27 @@ async def analyze_code(request: CodeRequest):
         raise HTTPException(status_code=500, detail=f"Error analyzing the code: {str(e)}")
 
 
+@app.post("/generate_tests", tags=["Test Generation"], response_model=Dict[str, Any])
+async def generate_tests(request: CodeTestGenerationRequest):
+    """
+    Generates test cases for a given code snippet.
+
+    Parameters:
+    - **request**: Contains the code snippet, user role, and test framework.
+
+    Returns:
+    - JSON response containing the generated test cases.
+    """
+    try:
+        return await generate_tests_agent(request)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating tests: {str(e)}")
+
+
+
 @app.post(
     "/chat",
-    summary="Analyze a code snippet and explain it using business context",
+    summary="Respond to a chat message with a business explanation",
     tags=["Chat"],
     response_model=Dict[str, Any],
 )
@@ -64,6 +84,8 @@ async def analyze_code(request: ChatRequest):
         return await ask_question(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error Responding {str(e)}")
+
+
 
 
 @app.post("/qdrant/instantiate", tags=["Qdrant"], response_model=Dict[str, Any])
