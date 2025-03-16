@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException, Query
+
+from agents.AnnotateAgent import annotate_code
 from agents.ExplainAgent import explain_business
 from agents.TestGenerationAgent import generate_tests_agent
+from models.AnnotateResponse import Annotation
 from models.ChatRequest import ChatRequest
 from models.CodeRequest import CodeRequest
 from models.CodeTestGenerationRequest import CodeTestGenerationRequest
@@ -44,6 +47,28 @@ async def analyze_code(request: CodeRequest):
         return await explain_business(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error analyzing the code: {str(e)}")
+
+
+@app.post(
+    "/analyze-code/annotate",
+    summary="Annotate a code snippet with business context",
+    tags=["Code Analysis"],
+    response_model=List[Annotation]
+)
+async def analyze_annotate_code(request: CodeRequest):
+    """
+    Annotates a given code snippet with business context.
+
+    Parameters:
+    - **request**: Contains the code snippet, user role and complexity.
+
+    Returns:
+    - JSON response containing the annotations.
+    """
+    try:
+        return await annotate_code(request)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error annotating the code: {str(e)}")
 
 
 @app.post("/generate_tests", tags=["Test Generation"], response_model=Dict[str, Any])

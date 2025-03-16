@@ -53,9 +53,8 @@ def add_business_context(run_context) -> str:
     
     ### Structural Guidance:
     1. **Annotations**: Provide a list of annotations for the code blocks in the provided code snippet.
-        1.1. **Start Line**: The starting line of the annotated block.
-        1.2. **End Line**: The ending line of the annotated
-        1.3. **Explanation**: The explanation of the annotated block.
+        1.1. **Annotation Line**: The first line of the annotated block.
+        1.2. **Explanation**: The explanation of the annotated block.
     
     ### Business Context:
     {run_context.deps.business_context}
