@@ -17,7 +17,7 @@ dockerize_and_publish:
 
   script:
     - docker build -t $SERVICE_IMAGE .
-    - docker build -t $OLLAMA_IMAGE config/ollama/
+    - docker build -t $OLLAMA_IMAGE ollama/
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin
     - docker push $SERVICE_IMAGE
     - docker push $OLLAMA_IMAGE
