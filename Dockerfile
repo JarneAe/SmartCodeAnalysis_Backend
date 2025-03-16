@@ -8,7 +8,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project into the container
-COPY . /app/
+COPY docker /app/
 
 # Ensure Python includes the /app directory in the Python path
 ENV PYTHONPATH="/app:${PYTHONPATH}"
