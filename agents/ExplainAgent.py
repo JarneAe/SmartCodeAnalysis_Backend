@@ -112,4 +112,3 @@ async def explain_business(request: CodeRequest):
     except Exception as e:
         logfire.error(f"Error during business explanation: {str(e)}")
         return {"error": "An error occurred while processing the request."}
-

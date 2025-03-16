@@ -11,6 +11,7 @@ from models.ContextRequest import ContextFile
 
 # Download necessary NLTK resources for sentence tokenization
 nltk.download('punkt')
+nltk.download('punkt_tab')
 
 # Constants for configuration
 COLLECTION_NAME = "TestCollection"
