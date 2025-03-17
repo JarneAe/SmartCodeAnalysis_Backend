@@ -8,8 +8,8 @@ echo "pulling qwen2.5:7b model"
 ollama pull qwen2.5:7b
 echo "pulling nomic-embed-text model"
 ollama pull nomic-embed-text
-echo "pulling qwq model"
-ollama pull qwq
+#echo "pulling qwq model"
+#ollama pull qwq
 
 echo " === ALL MODELS PULLED ==="
 
