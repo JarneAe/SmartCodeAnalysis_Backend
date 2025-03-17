@@ -14,7 +14,7 @@ logfire.instrument_httpx(capture_all=True)
 
 
 ollama_model = OpenAIModel(
-    model_name='qwen2.5:7b',
+    model_name='qwq',
     base_url=OLLAMA_URI + "/v1",
     api_key=os.getenv("OLLAMA_API_KEY", "default_api_key"),
 )
