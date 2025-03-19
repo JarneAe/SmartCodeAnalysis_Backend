@@ -124,6 +124,8 @@ def search_similar_text_qdrant(query_text: str, collection_name: str, top_k: int
     """
     query_embedding = get_embeddings(query_text)
 
+    print(collection_name)
+
     search_results = qclient.search(
         collection_name=collection_name,
         query_vector=query_embedding,
