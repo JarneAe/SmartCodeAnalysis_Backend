@@ -5,6 +5,7 @@ from pydantic_ai.models.openai import OpenAIModel
 from models.ChatDependencies import ChatDependencies
 from models.ChatRequest import ChatRequest
 from qdrant.qdrant_methods import search_similar_text_qdrant
+from retrieval import retrieve, RetrievalRequest
 
 OLLAMA_URI = os.getenv("OLLAMA_URI", "http://localhost:11434")
 logfire.configure()
@@ -32,10 +33,14 @@ def system_prompt(run_context) -> str:
     **Relevant Business Context:**
     {deps.business_context if deps.business_context else "No specific context available. Provide a general but insightful response."}
 
+    **Relevant Code Snippets:**
+    {deps.code_snippets if deps.code_snippets else "No specific code snippets available." }
+
     ### **Instructions:**
     - Keep responses **brief yet comprehensive** (ideally under 200 words).
     - Use **concrete examples** and **specific details** where possible.
     - **Avoid vague statements**—ensure explanations are direct and useful.
+    - Do not mention the code snippets. If they do not provide enough context, ignore them. 
     - If additional information is needed, state what’s missing.
     """
 
@@ -49,8 +54,12 @@ async def ask_question(request: ChatRequest):
     try:
         business_context = await get_business_context(request.chat_message, request.collection_name)
 
+        codebase_id = request.collection_name[-36:] # very scuffed
+        code_snippets = retrieve(RetrievalRequest(codebase_id=codebase_id, query=request.chat_message, n=3))
+
         dependencies = ChatDependencies(
             business_context=business_context,
+            code_snippets=code_snippets
         )
 
         result = await question_agent.run(
