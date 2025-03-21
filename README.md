@@ -30,7 +30,7 @@ docker-compose up --build
 
 Once the services are up, open your browser and navigate to:
 
-http://localhost:8001/docs
+http://localhost:8000/docs
 
 This will open the Swagger-UI, where you can:
 
@@ -38,6 +38,20 @@ This will open the Swagger-UI, where you can:
 - Test the endpoints directly from the browser.
 
 --- 
-#Technical details
+# Technical details
 
 ## Diagram
+
+![The Lab Architecture.png](readme-content/The%20Lab%20Architecture.png)
+
+## Key components
+
+- FastAPI Backend: Provides the API for interaction.
+- Ollama Model: A custom-trained language model that understands the Machi Koro rulebook and generates intelligent responses.
+- Qdrant Vector Database: Stores the embeddings of the business context  and enables efficient similarity searches.
+
+### Contributors
+
+[Jarne Aerts](https://www.linkedin.com/in/jarne-aerts/) \
+[Rob Hellemans](https://www.linkedin.com/in/rob-hellemans/) \
+[Seppe Van Hoof](https://www.linkedin.com/in/seppe-van-hoof-b76786225/)
