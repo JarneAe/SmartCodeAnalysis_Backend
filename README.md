@@ -4,7 +4,7 @@ This repository holds the AI backend for our smart code analysis project. The ba
 
 We use business conext to provide the LLM with more context, this gives it an upperhand compared to cloud LLM's that don't have any business context
 
-The backend can run as is and give functional resulst
+The backend can run as is and give functional resulsts, but its highly recommended to use our front end
 
 ## Getting started
 
